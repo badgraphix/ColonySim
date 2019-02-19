@@ -47,7 +47,7 @@ class tile(object):#class for tiles, mostly a placeholder/template for tile guy
         return (255,255,255)#unknown tile types show up as white
     
 
-class gMap:#class for map, comtains size information, and a list of all tiles within the map, can be saved in game and loaded
+class gMap:#class for map, contains size information, and a list of all tiles within the map, can be saved in game and loaded
     xSize=2#default x,y size of class, not used when run
     ySize=2
     data=[]#data holds the tiles in a single list, but the setters and getters use x,y adressing, the rest of this class seems self explanatory
@@ -224,7 +224,55 @@ def main():
     #not my code *VVVVVV
     pygame.quit(); sys.exit();
 
-    
+class resource:
+    resourceType = None
+    quantity = None
+    def __init__(self, resourceType, quantity):
+        self.resourceType = resourceType
+        self.quantity = quantity
+class unit:
+    # Coordinates
+    xPos = 0
+    yPos = 0
+    #Hunger. When it hits 0, the unit dies.
+    hungerPoints = 100
+    #Unit type. Represented as an integer that is used as the parameter for a getUnitData() function.
+    unitType = 1
+    #Inventory. Holds 1 resource object (these describe what the type and quantity of it is).
+    inventory = None
+    def __init__(self, unitType, x, y):
+        self.unitType = unitType
+        self.xPos = x
+        self.yPos = y
+
+        for total in range ( 0 , self.xSize * self.ySize ) :
+            newTile = tile ( total % 5 )  # oh, by default, the map populates with all tile types alternating.
+            self.data.append ( newTile )
+
+    def setInventory(self, resourceObj):
+        self.inventory = inventory
+    def getCurrentTile(self):
+        #Uses self.xPos and self.yPos to find the tile on the tile table and returns it.
+
+    def collectResource(self):
+        #Farms resource on the tile the unit is standing on. This is fired for all units on every tick, if it is possible for them to farm something.
+        currentTile = self.getCurrentTile()
+        #TODO: add a function in tile that lets us remove a resource from it and return it here.
+        self.i
+    data=[]#data holds the tiles in a single list, but the setters and getters use x,y adressing, the rest of this class seems self explanatory
+    def __init__(self, x, y):
+        self.xSize=x
+        self.ySize=y
+        self.data= []
+        for total in range(0,self.xSize*self.ySize):
+            newTile=tile(total%5)#oh, by default, the map populates with all tile types alternating.
+            self.data.append(newTile)
+    def getColor(self, xInd,yInd):
+        return self.data[yInd*self.xSize+xInd].color()
+    def setColor(self, xInd,yInd,num):
+        return self.data[yInd*self.xSize+xInd].setType(num)
+
 #if python says run, let's run!
 if __name__ == '__main__':
+    createUnit()
     main()
