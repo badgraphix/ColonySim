@@ -250,7 +250,7 @@ class unit:
             self.data.append ( newTile )
 
     def setInventory(self, resourceObj):
-        self.inventory = inventory
+        self.inventory = resourceObj
     def getCurrentTile(self):
         #Uses self.xPos and self.yPos to find the tile on the tile table and returns it.
 
