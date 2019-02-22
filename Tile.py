@@ -1,7 +1,7 @@
 #Name
 #CSC 305
 #Colony Sim Game: Tile
-#2/17/2019
+#2/22/2019
 
 class tile(object):#class for tiles, mostly a placeholder/template for tile guy
     num=0 #identifies tile type, 0 for grassland, 1 for forest, 2 for water, 3 for mountain
