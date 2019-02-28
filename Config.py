@@ -1,7 +1,7 @@
 #Kevin Dunn, add names
 #CSC 305
 #Colony Sim Game: Config
-#2/22/2019
+#2/28/2019
 
 
 import pickle
@@ -11,6 +11,7 @@ import sys, random, os.path
 import math
 from Tile import *
 from Map import *
+from Unit import *
 from Main import *
 
 
@@ -29,4 +30,5 @@ loopMap=1#conditional, can be changed here before execution, 1 for looped infini
 loadMap=0# if 1, Save.txt will be imediately loaded
 stop=0 #ends the game when set to 1
 gameMap=gMap(150,150)#creates the map object, change sizes here to resize a map
+actors=Actor(5,150,150)
 screen=pygame.display.set_mode((tileSize*xlength+10,tileSize*ylength+10))
