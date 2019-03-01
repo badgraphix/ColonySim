@@ -1,7 +1,7 @@
 #Kevin Dunn, add names
 #CSC 305
 #Colony Sim Game: Main
-#2/22/2019
+#2/28/2019
 
 import pickle
 import pygame
@@ -10,6 +10,7 @@ import sys, random, os.path
 import math
 from Tile import *
 from Map import *
+from Unit import *
 from Input import *
 from Display import *
 import Config
@@ -30,7 +31,8 @@ def main():
         
         #take keyboard input
         inputEditor()
-        
+
+        Config.actors.allAct()
         drawAll()#call the draw map function
         pygame.display.update()#update map once updated
 
