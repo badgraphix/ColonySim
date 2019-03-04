@@ -108,8 +108,6 @@ def inputEditor():
 
         #'9' is used to save the game to a text file, '0' is used to load the save, to save long term, make sure to make a copy of this file elsewhere.
     if keypress[K_9]:
-        with open("Saves/Save.txt","wb") as fp:
-            pickle.dump(Config.gameMap, fp)
+        Config.gameMap.save()
     if keypress[K_0]:
-        with open("Saves/Save.txt","rb") as fp:
-            Config.gameMap=pickle.load(fp)
+        Config.gameMap.load("Saves/save1.txt")

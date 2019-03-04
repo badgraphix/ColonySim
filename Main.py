@@ -20,8 +20,7 @@ def main():
     pygame.init()
     
     if Config.loadMap==1:
-        with open("Saves/Save.txt","rb") as fp:
-                Config.gameMap=pickle.load(fp)
+        Config.gameMap.load("Saves/save1.txt")
 
                 
     
