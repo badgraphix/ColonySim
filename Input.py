@@ -93,7 +93,7 @@ def inputEditor():
 
 
         #here the plus and minus(without shift so - and =) are used to zoom in and out by powers of 2, the zoom is centered on the middle of the screen, and the cursor stays put relative to the map not the window(on purpose)    
-    if keypress[K_EQUALS] and Config.tileSize<=150:
+    if keypress[K_EQUALS] and Config.tileSize<=80:
         Config.tileSize=Config.tileSize*2
         Config.xlength=Config.xlength//2
         Config.ylength=Config.ylength//2
