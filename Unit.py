@@ -9,8 +9,9 @@ from pygame.locals import *
 import sys, random, os.path
 import math
 from Tile import *
-from Map import *
-#import Config
+from Unit import *
+
+
 
 class Actor:
     data=[]
@@ -83,7 +84,7 @@ class unit:
 
     def getCurrentTile(self):
         # TODO: Create getTile(x, y) in gMap.
-        return gMap.getTile(self.getXPos(), self.getYPos())  # .tileType (between 0 and 4)
+        return Config.gameMap.getTile(self.getXPos(), self.getYPos())  # .tileType (between 0 and 4)
 
     def setXPos(self, val):
         self.xPos = val
@@ -92,10 +93,10 @@ class unit:
         self.yPos = val
 
     def setTargetXPos(self, val):
-        self.targetXPos = val
+        self.targetXPos = val % Config.gameMap.xSize
 
     def setTargetYPos(self, val):
-        self.targetYPos = val
+        self.targetYPos = val % Config.gameMap.ySize
 
     def translatePosition(self, x, y):
         self.xPos += x
@@ -108,18 +109,30 @@ class unit:
         #resourceData = currentTile.collectResource() #TODO: add a function to Tile called collectResource() that returns .type (resource type) and .amount.
         #self.inventory[resourceData.type] = self.inventory[resourceData.type] + resourceData.amount #Add that to unit's inventory.
 
-    def findClosestTileOfType(self, tileType):
+    def findClosestTileOfType(self, destinationTileType):
         #TODO: Basically this whole function.
         targetTile = None
-        tiles = gMap.data
+        tiles = Config.gameMap.data
+        print("TOTAL TILES " + str(len(tiles)))
         # Search for the nearest tile of tileType
-        #for i in range(0,tiles):  # This should check all tiles around the unit, then the ones around them, and so on, continuing farther out each time.
-        #    tile = tiles[i]  # Right now we are using a much dumber algorithm to test with.
-       #     if tile.getColor() == 2:
-        self.setTargetXPos(10)
-        self.setTargetYPos(10)
-        #        break
-
+        mapSizeX = Config.gameMap.xSize
+        mapSizeY = Config.gameMap.ySize
+        tileFound = False
+        for x in range(0,mapSizeX):  # This should check all tiles around the unit, then the ones around them, and so on, continuing farther out each time.
+            for y in range(0,mapSizeY):
+                if tileFound == False:
+                    tile = Config.gameMap.getTile(x,y)  # Right now we are using a much dumber algorithm to test with.
+                    tileType = tile.getType()
+                    print(tileType, " vs ", destinationTileType)
+                    if tileType == destinationTileType:
+                        print("Setting to ", x, ",", y)
+                        self.setTargetXPos(x)
+                        self.setTargetYPos(y)
+                        tileFound = True
+                else:
+                    break
+            if tileFound == True:
+                break
     def isUnitAtTargetPos(self): #Returns true if unit is at target position, returns false if it is not.
         return (self.getXPos() == self.getTargetXPos()) and (self.getYPos() == self.getTargetYPos())
 
@@ -144,3 +157,5 @@ class unit:
                 self.translatePosition(0, -1)
             elif self.getTargetYPos() > self.getYPos():
                 self.translatePosition(0, 1)
+
+import Config
