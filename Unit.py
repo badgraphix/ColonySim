@@ -47,16 +47,21 @@ class unit(object):
         return self.inventory
     def getBehavior(self):
         return self.behavior
-    #def getCurrentTile(self):#TODO: Uses self.xPos and self.yPos to find the tile on the tile table and returns it.
-        #print("Hello")
-        #return config.gameMap.getTile(x,y);
+    def getCurrentTile(self):#TODO: Uses self.xPos and self.yPos to find the tile on the tile table and returns it.
+        print("Hello")
+        return Config.gameMap.getTile(self.xPos,self.yPos);
         #.tileType (between 0 and 4)
     def modifyPosition(self, x, y):
-        self.xPos += x
-        self.yPos += y
-    #def collectResource(self):#Farms resource on the tile the unit is standing on. This is fired for all units on every tick, if it is possible for them to farm something.
-     #   currentTile = self.getCurrentTile()
+        self.xPos = (self.xPos+x)%Config.gameMap.xSize
+        self.yPos = (self.yPos+y)%Config.gameMap.ySize
+    def collectResource(self):#Farms resource on the tile the unit is standing on. This is fired for all units on every tick, if it is possible for them to farm something.
+        currentTile = self.getCurrentTile()
         #TODO: add a function in tile that lets us remove a resource from it and return it here.
     def perform(self): #This is fired every tick. What action the unit performs is dependent on its behavior, as well as external factors.
+        self.getCurrentTile()
         if self.getBehavior() == 0 and random.randint(0,4)==0: #Continuously travel right
             self.modifyPosition(random.randint(-1,1),random.randint(-1,1))
+
+
+
+import Config

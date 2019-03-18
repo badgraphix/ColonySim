@@ -14,6 +14,7 @@ from Unit import *
 from Input import *
 import Main
 import Config
+import time
 
 
 #Kevin's
@@ -48,10 +49,25 @@ def drawUnit():
             for mapY in range(mapTempY-1,mapLengthY+mapTempY+1):
                 pygame.draw.rect(Config.screen,(200,200,200),(5+Config.tileSize*((Config.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),5+Config.tileSize*(((Config.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),Config.tileSize//2)
 
+def drawText(X,Y,Text,size):
+    fontDisplay= pygame.font.Font(Config.gameFont,size)
+    textRender=fontDisplay.render(Text,False, (0,0,0))
+    Config.screen.blit(textRender,(X,Y))
+
+
+def frameRate():
+    tempTime=time.time()//1
+    if Config.timeSeconds==tempTime:
+        Config.frameCount+=1
+    else:
+        Config.frameRate=Config.frameCount
+        Config.frameCount=0
+        Config.timeSeconds=tempTime
+    drawText(10,10,str(Config.frameRate),30)
+        
+
 #Kevin's
 def drawAll(): #Draws all the objects, will need an update when unit actors arrive
-
-
     Config.screen.fill((0,200,0))
     for x in range(0,Config.xlength):
         for y in range(0,Config.ylength):
@@ -61,4 +77,5 @@ def drawAll(): #Draws all the objects, will need an update when unit actors arri
                 pygame.draw.rect(Config.screen,(255-(255*(x+y)/(Config.xlength+Config.ylength)),255*x/Config.xlength,255*y/Config.ylength),(5+Config.tileSize*x,5+Config.tileSize*y,Config.tileSize,Config.tileSize),0)
     drawCursor()
     drawUnit()
+    frameRate()
 

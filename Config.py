@@ -15,6 +15,7 @@ from Unit import *
 from Main import *
 
 
+
 #GlobalVariables
 xlength=32 #height and width of the window in tiles, a multiple of 2 for zoomability scale issues
 ylength=16 #^^
@@ -32,3 +33,7 @@ stop=0 #ends the game when set to 1
 gameMap=gMap(150,150)#creates the map object, change sizes here to resize a map
 actors=Actor(5,150,150)
 screen=pygame.display.set_mode((tileSize*xlength+10,tileSize*ylength+10))
+gameFont = pygame.font.match_font('arial')
+timeSeconds=0
+frameCount=0
+frameRate=0
