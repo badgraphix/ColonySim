@@ -32,7 +32,8 @@ def main():
         #take keyboard input
         inputEditor()
 
-        Config.actors.allAct()
+        if Config.pause==0:
+            Config.actors.allAct()
         drawAll()#call the draw map function
         pygame.display.update()#update map once updated
 

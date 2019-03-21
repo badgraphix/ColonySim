@@ -13,15 +13,27 @@ from Map import *
 import Main
 import Config
 
+def scaleSprites():
+    if Config.tileSize==4:
+        Config.unitImg=Config.unitx4
+    if Config.tileSize==8:
+        Config.unitImg=Config.unitx8
+    if Config.tileSize==16:
+        Config.unitImg=Config.unitx16
+    if Config.tileSize==32:
+        Config.unitImg=Config.unitx32
+    if Config.tileSize==64:
+        Config.unitImg=Config.unitx64
+    if Config.tileSize==128:
+        Config.unitImg=Config.unitx128
 
 def inputEditor():
     
     pygame.event.pump()
     keypress=pygame.key.get_pressed()
 
-    if pygame.event.peek(QUIT):
-        pygame.quit()
-        sys.exit()
+    if pygame.event.peek(QUIT) or keypress[K_ESCAPE]:
+        Config.stop=1
     
     Config.offsetX-=(keypress[K_RIGHT]-keypress[K_LEFT])*(32//Config.tileSize+1)#arrow keys are used to pan around the world
     Config.offsetY-=(keypress[K_DOWN]-keypress[K_UP])*(32//Config.tileSize+1)#^^
@@ -99,12 +111,14 @@ def inputEditor():
         Config.ylength=Config.ylength//2
         Config.offsetX-=Config.xlength//2
         Config.offsetY-=Config.ylength//2
+        scaleSprites()
     if keypress[K_MINUS] and Config.tileSize>=5:
         Config.tileSize=Config.tileSize//2
         Config.xlength=Config.xlength*2
         Config.ylength=Config.ylength*2
         Config.offsetX+=Config.xlength//4
         Config.offsetY+=Config.ylength//4
+        scaleSprites()
 
         #'9' is used to save the game to a text file, '0' is used to load the save, to save long term, make sure to make a copy of this file elsewhere.
     if keypress[K_9]:
@@ -113,3 +127,7 @@ def inputEditor():
     if keypress[K_0]:
         with open("Saves/Save.txt","rb") as fp:
             Config.gameMap=pickle.load(fp)
+
+
+    if keypress[K_SPACE]:
+        Config.pause=(Config.pause+1)%2

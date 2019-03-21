@@ -47,7 +47,8 @@ def drawUnit():
     for temp in range(0,5):
         for mapX in range(mapTempX-1,mapLengthX+mapTempX+1):
             for mapY in range(mapTempY-1,mapLengthY+mapTempY+1):
-                pygame.draw.rect(Config.screen,(200,200,200),(5+Config.tileSize*((Config.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),5+Config.tileSize*(((Config.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),Config.tileSize//2)
+                Config.screen.blit(Config.unitImg,(5+Config.tileSize*((Config.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),5+Config.tileSize*(((Config.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize))
+                pygame.draw.rect(Config.screen,(200,200,200),(5+Config.tileSize*((Config.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),5+Config.tileSize*(((Config.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),1)
 
 def drawText(X,Y,Text,size):
     fontDisplay= pygame.font.Font(Config.gameFont,size)
@@ -64,7 +65,11 @@ def frameRate():
         Config.frameCount=0
         Config.timeSeconds=tempTime
     drawText(10,10,str(Config.frameRate),30)
-        
+
+def displayPause():
+    tempTime=time.time()*1000-((time.time()//1)*1000)
+    if tempTime//500==0:
+        drawText(200,200,"PAUSED", 50)
 
 #Kevin's
 def drawAll(): #Draws all the objects, will need an update when unit actors arrive
@@ -78,4 +83,6 @@ def drawAll(): #Draws all the objects, will need an update when unit actors arri
     drawCursor()
     drawUnit()
     frameRate()
+    if Config.pause==1:
+        displayPause()
 

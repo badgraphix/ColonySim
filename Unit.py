@@ -13,11 +13,13 @@ from Tile import *
 
 class Actor:
     data=[]
+    #imgDisplay=[]
     totalActors=0
     def __init__(self, num,x,y):
         self.totalActors=num
         for temp in range(0,num):
             unitTemp=unit(0,random.randint(0,x),random.randint(0,y))
+            #surfaceTemp=Surface(32,32)
             self.data.append(unitTemp)
     def allAct(self):
         for temp in range(0,self.totalActors):
