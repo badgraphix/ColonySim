@@ -54,4 +54,36 @@ unitx128= pygame.image.load("128xUnit.bmp")
 unitx128.set_colorkey((255,0,255))
 unitImg= unitx32
 
+grassx4= pygame.image.load("4xGrass.bmp")
+grassx8= pygame.image.load("8xGrass.bmp")
+grassx16= pygame.image.load("16xGrass.bmp")
+grassx32= pygame.image.load("32xGrass.bmp")
+grassx64= pygame.image.load("64xGrass.bmp")
+grassx128= pygame.image.load("128xGrass.bmp")
+grassImg= grassx32
+
+woodsx4= pygame.image.load("4xWoods.bmp")
+woodsx8= pygame.image.load("8xWoods.bmp")
+woodsx16= pygame.image.load("16xWoods.bmp")
+woodsx32= pygame.image.load("32xWoods.bmp")
+woodsx64= pygame.image.load("64xWoods.bmp")
+woodsx128= pygame.image.load("128xWoods.bmp")
+woodsImg= woodsx32
+
+waterx4= pygame.image.load("4xWater.bmp")
+waterx8= pygame.image.load("8xWater.bmp")
+waterx16= pygame.image.load("16xWater.bmp")
+waterx32= pygame.image.load("32xWater.bmp")
+waterx64= pygame.image.load("64xWater.bmp")
+waterx128= pygame.image.load("128xWater.bmp")
+waterImg= waterx32
+
+rocksx4= pygame.image.load("4xRocks.bmp")
+rocksx8= pygame.image.load("8xRocks.bmp")
+rocksx16= pygame.image.load("16xRocks.bmp")
+rocksx32= pygame.image.load("32xRocks.bmp")
+rocksx64= pygame.image.load("64xRocks.bmp")
+rocksx128= pygame.image.load("128xRocks.bmp")
+rocksImg= rocksx32
+
 

@@ -16,16 +16,40 @@ import Config
 def scaleSprites():
     if Config.tileSize==4:
         Config.unitImg=Config.unitx4
+        Config.grassImg=Config.grassx4
+        Config.woodsImg=Config.woodsx4
+        Config.waterImg=Config.waterx4
+        Config.rocksImg=Config.rocksx4
     if Config.tileSize==8:
         Config.unitImg=Config.unitx8
+        Config.grassImg=Config.grassx8
+        Config.woodsImg=Config.woodsx8
+        Config.waterImg=Config.waterx8
+        Config.rocksImg=Config.rocksx8
     if Config.tileSize==16:
         Config.unitImg=Config.unitx16
+        Config.grassImg=Config.grassx16
+        Config.woodsImg=Config.woodsx16
+        Config.waterImg=Config.waterx16
+        Config.rocksImg=Config.rocksx16
     if Config.tileSize==32:
         Config.unitImg=Config.unitx32
+        Config.grassImg=Config.grassx32
+        Config.woodsImg=Config.woodsx32
+        Config.waterImg=Config.waterx32
+        Config.rocksImg=Config.rocksx32
     if Config.tileSize==64:
         Config.unitImg=Config.unitx64
+        Config.grassImg=Config.grassx64
+        Config.woodsImg=Config.woodsx64
+        Config.waterImg=Config.waterx64
+        Config.rocksImg=Config.rocksx64
     if Config.tileSize==128:
         Config.unitImg=Config.unitx128
+        Config.grassImg=Config.grassx128
+        Config.woodsImg=Config.woodsx128
+        Config.waterImg=Config.waterx128
+        Config.rocksImg=Config.rocksx128
 
 def inputEditor():
     

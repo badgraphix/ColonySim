@@ -48,7 +48,7 @@ def drawUnit():
         for mapX in range(mapTempX-1,mapLengthX+mapTempX+1):
             for mapY in range(mapTempY-1,mapLengthY+mapTempY+1):
                 Config.screen.blit(Config.unitImg,(5+Config.tileSize*((Config.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),5+Config.tileSize*(((Config.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize))
-                pygame.draw.rect(Config.screen,(200,200,200),(5+Config.tileSize*((Config.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),5+Config.tileSize*(((Config.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),1)
+                #pygame.draw.rect(Config.screen,(200,200,200),(5+Config.tileSize*((Config.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),5+Config.tileSize*(((Config.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),1)
 
 def drawText(X,Y,Text,size):
     fontDisplay= pygame.font.Font(Config.gameFont,size)
@@ -77,7 +77,16 @@ def drawAll(): #Draws all the objects, will need an update when unit actors arri
     for x in range(0,Config.xlength):
         for y in range(0,Config.ylength):
             if Config.loopMap==1 or Config.gameMap.xSize+Config.offsetX>x and Config.offsetX<=x and Config.gameMap.ySize+Config.offsetY>y and Config.offsetY<=y:
-                pygame.draw.rect(Config.screen,Config.gameMap.getColor((x-Config.offsetX)%(Config.gameMap.xSize),(y-Config.offsetY)%(Config.gameMap.ySize)),(5+Config.tileSize*x,5+Config.tileSize*y,Config.tileSize,Config.tileSize),0)
+                if Config.gameMap.getTile((x-Config.offsetX)%(Config.gameMap.xSize),(y-Config.offsetY)%(Config.gameMap.ySize)).tileType==0:
+                    Config.screen.blit(Config.grassImg,(5+Config.tileSize*x,5+Config.tileSize*y))
+                elif Config.gameMap.getTile((x-Config.offsetX)%(Config.gameMap.xSize),(y-Config.offsetY)%(Config.gameMap.ySize)).tileType==1:
+                    Config.screen.blit(Config.woodsImg,(5+Config.tileSize*x,5+Config.tileSize*y))
+                elif Config.gameMap.getTile((x-Config.offsetX)%(Config.gameMap.xSize),(y-Config.offsetY)%(Config.gameMap.ySize)).tileType==2:
+                    Config.screen.blit(Config.waterImg,(5+Config.tileSize*x,5+Config.tileSize*y))
+                elif Config.gameMap.getTile((x-Config.offsetX)%(Config.gameMap.xSize),(y-Config.offsetY)%(Config.gameMap.ySize)).tileType==3:
+                    Config.screen.blit(Config.rocksImg,(5+Config.tileSize*x,5+Config.tileSize*y))
+                else:
+                    pygame.draw.rect(Config.screen,Config.gameMap.getColor((x-Config.offsetX)%(Config.gameMap.xSize),(y-Config.offsetY)%(Config.gameMap.ySize)),(5+Config.tileSize*x,5+Config.tileSize*y,Config.tileSize,Config.tileSize),0)
             else:#else background rainbow
                 pygame.draw.rect(Config.screen,(255-(255*(x+y)/(Config.xlength+Config.ylength)),255*x/Config.xlength,255*y/Config.ylength),(5+Config.tileSize*x,5+Config.tileSize*y,Config.tileSize,Config.tileSize),0)
     drawCursor()
