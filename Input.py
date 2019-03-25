@@ -1,7 +1,7 @@
 #Kevin Dunn, add names
 #CSC 305
 #Colony Sim Game: Input
-#2/22/2019
+#3/22/2019
 
 import pickle
 import pygame
@@ -13,6 +13,7 @@ from Map import *
 import Main
 import Config
 
+#When a scale change takes place, all the sprites are set to the correct size
 def scaleSprites():
     if Config.tileSize==4:
         Config.unitImg=Config.unitx4
@@ -56,6 +57,7 @@ def inputEditor():
     pygame.event.pump()
     keypress=pygame.key.get_pressed()
 
+    #Quits the game if "ESCAPE" or the corner 'x' are pressed
     if pygame.event.peek(QUIT) or keypress[K_ESCAPE]:
         Config.stop=1
     
@@ -114,21 +116,19 @@ def inputEditor():
                     if (Config.loopMap==1 and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize) or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 3)
 
-        #adjusts the brush size
+    #adjusts the brush size
     if keypress[K_p]:
         Config.brushSize+=1
     if keypress[K_o] and Config.brushSize!=0:
         Config.brushSize-=1
-    if keypress[K_i]:#change brush shape between square, diamond, and round
-        if Config.brushType==0:
-            Config.brushType=1
-        elif Config.brushType==1:
-            Config.brushType=2
-        elif Config.brushType==2:
-            Config.brushType=0
+        
+    #change brush shape between square, diamond, and round
+    if keypress[K_i]:
+        Config.brushType=(Config.brushType+1)%3
+        
 
 
-        #here the plus and minus(without shift so - and =) are used to zoom in and out by powers of 2, the zoom is centered on the middle of the screen, and the cursor stays put relative to the map not the window(on purpose)    
+    #here the plus and minus(without shift so - and =) are used to zoom in and out by powers of 2, the zoom is centered on the middle of the screen, and the cursor stays put relative to the map not the window(on purpose)    
     if keypress[K_EQUALS] and Config.tileSize<=80:
         Config.tileSize=Config.tileSize*2
         Config.xlength=Config.xlength//2
@@ -144,7 +144,7 @@ def inputEditor():
         Config.offsetY+=Config.ylength//4
         scaleSprites()
 
-        #'9' is used to save the game to a text file, '0' is used to load the save, to save long term, make sure to make a copy of this file elsewhere.
+    #'9' is used to save the game to a text file, '0' is used to load the save, to save long term, make sure to make a copy of this file elsewhere.
     if keypress[K_9]:
         with open("Saves/Save.txt","wb") as fp:
             pickle.dump(Config.gameMap, fp)
@@ -152,6 +152,6 @@ def inputEditor():
         with open("Saves/Save.txt","rb") as fp:
             Config.gameMap=pickle.load(fp)
 
-
+    # Space is used to pause the game
     if keypress[K_SPACE]:
         Config.pause=(Config.pause+1)%2

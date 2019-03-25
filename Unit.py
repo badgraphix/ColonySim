@@ -50,7 +50,7 @@ class unit(object):
     def getBehavior(self):
         return self.behavior
     def getCurrentTile(self):#TODO: Uses self.xPos and self.yPos to find the tile on the tile table and returns it.
-        print("Hello")
+        #print("Hello")
         return Config.gameMap.getTile(self.xPos,self.yPos);
         #.tileType (between 0 and 4)
     def modifyPosition(self, x, y):
@@ -60,7 +60,7 @@ class unit(object):
         currentTile = self.getCurrentTile()
         #TODO: add a function in tile that lets us remove a resource from it and return it here.
     def perform(self): #This is fired every tick. What action the unit performs is dependent on its behavior, as well as external factors.
-        self.getCurrentTile()
+        #self.getCurrentTile()
         if self.getBehavior() == 0 and random.randint(0,4)==0: #Continuously travel right
             self.modifyPosition(random.randint(-1,1),random.randint(-1,1))
 
