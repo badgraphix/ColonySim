@@ -19,7 +19,7 @@ class Actor:
     def __init__(self, num,x,y):
         self.totalActors=num
         for temp in range(0,num):
-            unitTemp=unit(random.randint(0,x),random.randint(0,y))
+            unitTemp=unit(random.randint(0,x),random.randint(0,y), num)
             self.data.append(unitTemp)
     def allAct(self):
         for temp in range(0,self.totalActors):
@@ -46,7 +46,8 @@ class unit:
     targetTile = None  # Specifies where the unit is heading towards. Does not always contain a value.
     priorityQueue = [1, 2, 3, 4, 5]
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, unitID):
+        self.unitID = unitID
         self.setXPos(x)
         self.setYPos(y)
         self.setInPriorityQueue(1,0)
@@ -99,21 +100,25 @@ class unit:
         self.targetYPos = val % Config.gameMap.ySize
 
     def translatePosition(self, x, y):
+        currentTile = Config.gameMap.getTile(self.getXPos(), self.getYPos())
+        currentTile.setStationedUnitID(-1)
         self.xPos += x
         self.yPos += y
+        newTile = Config.gameMap.getTile(self.getXPos(), self.getYPos())
+        newTile.setStationedUnitID(self.unitID)
 
     def collectResource(self):
-        print("Farming resource")
-        # Farms resource on the tile the unit is standing on. This is fired for all units on every tick, if it is possible for them to farm something.
-        #currentTile = self.getCurrentTile() # TODO: add a function in Tile that lets us remove a resource from it and return it here.
-        #resourceData = currentTile.collectResource() #TODO: add a function to Tile called collectResource() that returns .type (resource type) and .amount.
-        #self.inventory[resourceData.type] = self.inventory[resourceData.type] + resourceData.amount #Add that to unit's inventory.
 
+        # Farms resource on the tile the unit is standing on. This is fired for all units on every tick, if it is possible for them to farm something.
+        currentTile = self.getCurrentTile() # TODO: add a function in Tile that lets us remove a resource from it and return it here.
+        resourceData = currentTile.collectResource(1) #TODO: add a function to Tile called collectResource() that returns .type (resource type) and .amount.
+        self.inventory[resourceData[0]] = self.inventory[resourceData[0]] + resourceData[1] #Add that to unit's inventory.
+        print("Farming resource. Quantity ", resourceData[1], " of type ", resourceData[0])
     def findClosestTileOfType(self, destinationTileType):
         #TODO: Basically this whole function.
         targetTile = None
         tiles = Config.gameMap.data
-        print("TOTAL TILES " + str(len(tiles)))
+        #print("TOTAL TILES " + str(len(tiles)))
         # Search for the nearest tile of tileType
         mapSizeX = Config.gameMap.xSize
         mapSizeY = Config.gameMap.ySize
@@ -123,9 +128,9 @@ class unit:
                 if tileFound == False:
                     tile = Config.gameMap.getTile(x,y)  # Right now we are using a much dumber algorithm to test with.
                     tileType = tile.getType()
-                    print(tileType, " vs ", destinationTileType)
+                    #print(tileType, " vs ", destinationTileType)
                     if tileType == destinationTileType:
-                        print("Setting to ", x, ",", y)
+                        #print("Setting to ", x, ",", y)
                         self.setTargetXPos(x)
                         self.setTargetYPos(y)
                         tileFound = True
