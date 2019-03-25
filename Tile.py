@@ -1,57 +1,92 @@
-class tile(object):#class for tiles, mostly a placeholder/template for tile guy
-    
-    tileType = 0 #identifies tile type, 0 for grassland, 1 for forest, 2 for water, 3 for mountain, 4 for farmland
+class tile(object):  # class for tiles, mostly a placeholder/template for tile guy
+
+    tileType = 0  # identifies tile type, 0 for grassland, 1 for forest, 2 for water, 3 for mountain, 4 for farmland
     numWater = 0
     numFood = 0
     numWood = 0
     traversable = 1
-    def __init__(self, tileType, numWater, numFood, numWood, traversable):#initialized with it's tile type, grassland by default
-        self.tileType=tileType
-        self.numWater = numWater
+    stationedUnitID = -1 # -1 means no unit is occupying this tile
+
+    def __init__(self, tileType, numWater, numFood, numWood, traversable):  # initialized with it's tile type, grassland by default
+        self.tileType = tileType
+        self.numWater = 50 #numWater
         self.numFood = numFood
         self.numWood = numWood
         self.traversable = traversable
-        
-    def setType(self,tileType):#setter for type
+
+    def setType(self, tileType):  # setter for type
         self.tileType = tileType
-        if self.tileType == 0: #0 for Grassland
+        if self.tileType == 0:  # 0 for Grassland
             self.numWater = 0
             self.numFood = 0
             self.numWood = 0
             self.traversable = 1
-        if self.tileType == 1: #1 for Forest
+        if self.tileType == 1:  # 1 for Forest
             self.numWater = 0
             self.numFood = 0
             self.numWood = 50
             self.traversable = 1
-        if self.tileType == 2: #2 for Water
+        if self.tileType == 2:  # 2 for Water
             self.numWater = 50
             self.numFood = 0
             self.numWood = 0
             self.traversable = 0
-        if self.tileType == 3: #3 for Mountain
+        if self.tileType == 3:  # 3 for Mountain
             self.numWater = 0
             self.numFood = 0
             self.numWood = 0
             self.traversable = 0
-        if self.tileType == 4: #4 for Farmland
+        if self.tileType == 4:  # 4 for Farmland
             self.numWater = 0
             self.numFood = 50
             self.numWood = 0
             self.traversable = 1
-            
+
     def getType(self):
         return self.tileType
-    
-    def color(self):#getter for color, used in display
-        if self.tileType==0:
-            return (50,200,0) #solid colors used in leiu of sprites for now, to be discussed later
-        if self.tileType==1:
-            return (0,100,0) #colors picked to make intuitively clear what the tile is
-        if self.tileType==2:
-            return (0,0,200)
-        if self.tileType==3:
-            return (50,50,50)
-        if self.tileType==4:#not implemented, maybe farmland
-            return (100,100,0)
-        return (255,255,255)#unknown tile types show up as white
+
+    def color(self):  # getter for color, used in display
+        if self.tileType == 0:
+            return (50, 200, 0)  # solid colors used in leiu of sprites for now, to be discussed later
+        if self.tileType == 1:
+            return (0, 100, 0)  # colors picked to make intuitively clear what the tile is
+        if self.tileType == 2:
+            return (0, 0, 200)
+        if self.tileType == 3:
+            return (50, 50, 50)
+        if self.tileType == 4:  # not implemented, maybe farmland
+            return (100, 100, 0)
+        return (255, 255, 255)  # unknown tile types show up as white
+
+    def collectResource(self, amount):
+        if self.tileType == 1:
+            if self.numWood >= amount:
+                self.numWood = self.numWood - amount
+                return (self.tileType, amount)
+            else:
+                amountRetrieved = self.numWood
+                self.numWood = 0
+                return (self.tileType, amountRetrieved)
+        if self.tileType == 2:
+            print("WATER IS ", self.numWater)
+            if self.numWater >= amount:
+                self.numWater = self.numWater - amount
+                return (self.tileType, amount)
+            else:
+                amountRetrieved = self.numWater
+                self.numWater = 0
+                return (self.tileType, amountRetrieved)
+        if self.tileType == 4:
+            if self.numFood >= amount:
+                self.numFood = self.numFood - amount
+                return (self.tileType, amount)
+            else:
+                amountRetrieved = self.numFood
+                return (self.tileType, self.numFood)
+                self.numFood = 0
+        else:
+            return (0, 0)
+    def setStationedUnitID(self, unitID):
+        self.stationedUnitID = unitID
+    def getStationedUnitID(self):
+        return self.stationedUnitID

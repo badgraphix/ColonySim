@@ -53,7 +53,7 @@ def scaleSprites():
         Config.rocksImg=Config.rocksx128
 
 def testSelect():
-    print(gameMap.getTile(dotX,dotY).getStationedUnitID())
+    print(Config.gameMap.getTile(Config.dotX,Config.dotY).getStationedUnitID())
 
 def inputEditor():
     
@@ -128,6 +128,7 @@ def inputEditor():
     #change brush shape between square, diamond, and round
     if keypress[K_i]:
         Config.brushType=(Config.brushType+1)%3
+        testSelect()
         
 
 
@@ -158,4 +159,4 @@ def inputEditor():
     # Space is used to pause the game
     if keypress[K_SPACE]:
         Config.pause=(Config.pause+1)%2
-        testSelect()
+        
