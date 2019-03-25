@@ -52,6 +52,9 @@ def scaleSprites():
         Config.waterImg=Config.waterx128
         Config.rocksImg=Config.rocksx128
 
+def testSelect():
+    print(gameMap.getTile(dotX,dotY).getStationedUnitID())
+
 def inputEditor():
     
     pygame.event.pump()
@@ -63,8 +66,8 @@ def inputEditor():
     
     Config.offsetX-=(keypress[K_RIGHT]-keypress[K_LEFT])*(32//Config.tileSize+1)#arrow keys are used to pan around the world
     Config.offsetY-=(keypress[K_DOWN]-keypress[K_UP])*(32//Config.tileSize+1)#^^
-    Config.dotX-=keypress[K_a]-keypress[K_d]#wasd are used to move the cursor around, the black tile
-    Config.dotY-=keypress[K_w]-keypress[K_s]#^^
+    Config.dotX=(Config.dotX-(keypress[K_a]-keypress[K_d]))%Config.gameMap.xSize#wasd are used to move the cursor around, the black tile
+    Config.dotY=(Config.dotY-(keypress[K_w]-keypress[K_s]))%Config.gameMap.ySize#^^
 
         #here the number keys 1-4 can be pressed while the cursor is on the map, and it will assign a new type to that tile
     if keypress[K_1]:
@@ -155,3 +158,4 @@ def inputEditor():
     # Space is used to pause the game
     if keypress[K_SPACE]:
         Config.pause=(Config.pause+1)%2
+        testSelect()
