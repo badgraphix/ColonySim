@@ -9,7 +9,7 @@ from pygame.locals import *
 import sys, random, os.path
 import math
 from Tile import *
-from Unit import *
+import Config
 
 
 
@@ -163,4 +163,3 @@ class unit:
             elif self.getTargetYPos() > self.getYPos():
                 self.translatePosition(0, 1)
 
-import Config

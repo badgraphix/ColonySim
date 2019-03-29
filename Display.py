@@ -47,7 +47,7 @@ def drawUnit():
     for temp in range(0,5):
         for mapX in range(mapTempX-1,mapLengthX+mapTempX+1):
             for mapY in range(mapTempY-1,mapLengthY+mapTempY+1):
-                Config.screen.blit(Config.unitImg,(5+Config.tileSize*((Config.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),5+Config.tileSize*(((Config.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize))
+                Config.screen.blit(Config.unitImg,(5+Config.tileSize*((Main.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),5+Config.tileSize*(((Main.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize))
                 #pygame.draw.rect(Config.screen,(200,200,200),(5+Config.tileSize*((Config.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),5+Config.tileSize*(((Config.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),1)
 
 def drawText(X,Y,Text,size):
