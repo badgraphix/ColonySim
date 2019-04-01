@@ -37,6 +37,8 @@ class unit:
     targetXPos = None
     targetYPos = None
     # Hunger. When it hits 0, the unit dies.
+
+    #hp
     hungerPoints = 100
     # Unit type. Represented as an integer that is used as the parameter for a getUnitData() function.
     unitType = 1
