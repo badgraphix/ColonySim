@@ -1,19 +1,13 @@
 #Kevin Dunn, add names
 #CSC 305
 #Colony Sim Game: Main
-#2/22/2019
+#3/22/2019
 
-import pickle
-import pygame
-from pygame.locals import *
-import sys, random, os.path
-import math
-from Tile import *
-from Map import *
 from Input import *
 from Display import *
 import Config
-   
+
+actors = Actor(Config.actors, Config.actorsx, Config.actorsy)
 
 def main():
     
@@ -23,14 +17,16 @@ def main():
         with open("Saves/Save.txt","rb") as fp:
                 Config.gameMap=pickle.load(fp)
 
-                
-    
+
     while (Config.stop==0):#Main loop, ends if Config.stop is changed
         
         
         #take keyboard input
         inputEditor()
-        
+
+        if Config.pause==0:
+            actors.allAct()
+            
         drawAll()#call the draw map function
         pygame.display.update()#update map once updated
 
