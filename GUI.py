@@ -111,6 +111,11 @@ class BottomMenu:
     # The index of the currently selected unit in the units list. Defaults to zero
     selectedUnit = 0
 
+    # The number of boxes that fit into the middle box, and the starting horizontal offset. Calculated by breakBoxes()
+    # during __init__
+    numBoxes = 0
+    horizontalOffset = 0
+
     # Text members. Not necessarily constants
     buildingText = font.render("1. Buildings", True, TEXT_COLOR)
     unitText = font.render("2. Units", False, TEXT_COLOR)
@@ -122,6 +127,8 @@ class BottomMenu:
         self.trueHeight = height
         self.height = height * (1-coverage)
         self.width = width
+
+        self.numBoxes, self.horizontalOffset = self.breakBoxes()
 
     def draw(self, surface, units):
         # Drawing the rectangles to form the base of the menu
@@ -147,8 +154,8 @@ class BottomMenu:
 
         # If mode==2, meaning we want the unit view
         if self.mode == 2:
-            horizontalOffset = 10
-            verticalOffset = 20
+            horizontalOffset = self.horizontalOffset
+            verticalOffset = 25
 
             for unit in units.data:
                 pygame.draw.rect(surface, self.TEXT_COLOR, (self.width / 3 + horizontalOffset,
@@ -161,7 +168,7 @@ class BottomMenu:
                 horizontalOffset += 50
                 if self.width / 3 + horizontalOffset + self.boxSize > 2 * self.width / 3:
                     verticalOffset += 50
-                    horizontalOffset = 10
+                    horizontalOffset = self.horizontalOffset
 
     # Helper function to center text on the top of a box. Currently focuses on middle, can be expanded if needed.
     # "text" argument is the already-rendered object that is being blitted onto a surface
@@ -180,9 +187,38 @@ class BottomMenu:
             self.mode = 3
             self.centerText = self.font.render("Colony Overview", True, self.TEXT_COLOR)
 
+    # Input method to change the selected unit by changing the selected unit variable. Is put into its' own function
+    # to account for wrapping, and to handle up and down presses (since it is a 1-D list).
     def changeSelectedUnit(self, change, units):
         if change == 1:
             self.selectedUnit = (self.selectedUnit + 1) % len(units.data)
         elif change == -1:
             self.selectedUnit = (self.selectedUnit - 1) % len(units.data)
+        elif change == 10:
+            if self.selectedUnit - self.numBoxes >= 0:
+                self.selectedUnit -= self.numBoxes
+            elif self.selectedUnit + self.numBoxes < len(units.data):
+                self.selectedUnit += self.numBoxes
+        elif change == -10:
+            if self.selectedUnit + self.numBoxes < len(units.data):
+                self.selectedUnit += self.numBoxes
+            elif self.selectedUnit - self.numBoxes >= 0:
+                self.selectedUnit -= self.numBoxes
+
         print(self.selectedUnit)
+
+    # Method that breaks up how many boxes will fit into the middle square, and sets the padding accordingly. Will not
+    # be perfect
+    def breakBoxes(self):
+        count = 0
+        totalSpace = 0
+
+        while totalSpace + self.boxSize < self.width / 3:
+            count += 1
+            totalSpace += self.boxSize + 10
+
+        horizontalOffset = (self.width / 3 - totalSpace) / 2
+
+        print(count)
+
+        return count, horizontalOffset
