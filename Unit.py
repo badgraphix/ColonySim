@@ -25,10 +25,6 @@ class Actor:
         for temp in range(0,self.totalActors):
             self.data[temp].perform()
 
-
-
-
-
 class unit:
     # Coordinates
     xPos = 0
@@ -42,9 +38,11 @@ class unit:
     hungerPoints = 100
     # Unit type. Represented as an integer that is used as the parameter for a getUnitData() function.
     unitType = 1
-    # Inventory. Each entry in the array represents the quantity of that respective resource type. A unit can only hold ONE type of resource at a time, so keep this in mind while developing.
+    # Inventory. Each entry in the array represents the quantity of that respective resource type.
+    # A unit can only hold ONE type of resource at a time, so keep this in mind while developing.
     inventory = [0, 0, 0, 0, 0, 0]
-    behavior = 0  # Each behavior type is currently stored as an int. 0 is standby mode, where the unit will not perform any actions.
+    # Each behavior type is currently stored as an int. 0 is standby mode, where the unit will not perform any actions.
+    behavior = 0
     targetTile = None  # Specifies where the unit is heading towards. Does not always contain a value.
     priorityQueue = [1, 2, 3, 4, 5]
 

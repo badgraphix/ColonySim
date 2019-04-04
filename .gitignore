@@ -154,4 +154,7 @@ $RECYCLE.BIN/
 #Personal testing file
 test.py
 
+#Pycache folder
+__pycache__
+
 # End of https://www.gitignore.io/api/macos,linux,windows,pycharm

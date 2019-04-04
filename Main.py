@@ -18,7 +18,7 @@ def main():
                 Config.gameMap=pickle.load(fp)
 
 
-    while (Config.stop==0):#Main loop, ends if Config.stop is changed
+    while (Config.stop==0): #Main loop, ends if Config.stop is changed
         
         
         #take keyboard input
