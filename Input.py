@@ -70,49 +70,49 @@ def inputEditor():
         for tempX in range(-Config.brushSize,Config.brushSize+1):
             for tempY in range(-Config.brushSize,Config.brushSize+1):
                 if Config.brushType==0:
-                    if Config.loopMap==1 or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize:
+                    if Config.loopMap==1 or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 0)
                 elif Config.brushType==1:
-                    if (Config.loopMap==1 and abs(tempX)+abs(tempY)<=Config.brushSize) or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize and abs(tempX)+abs(tempY)<=Config.brushSize:
+                    if (Config.loopMap==1 and abs(tempX)+abs(tempY)<=Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and abs(tempX)+abs(tempY)<=Config.brushSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 0)
                 elif Config.brushType==2:
-                    if (Config.loopMap==1 and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize) or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize:
+                    if (Config.loopMap==1 and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and math.sqrt(math.pow(tempX, 2) + math.pow(tempY, 2))-0.2<=Config.brushSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 0)
     if keypress[K_2]:
         for tempX in range(-Config.brushSize,Config.brushSize+1):
             for tempY in range(-Config.brushSize,Config.brushSize+1):
                 if Config.brushType==0:
-                    if Config.loopMap==1 or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize:
+                    if Config.loopMap==1 or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 1)
                 elif Config.brushType==1:
-                    if (Config.loopMap==1 and abs(tempX)+abs(tempY)<=Config.brushSize) or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize and abs(tempX)+abs(tempY)<=Config.brushSize:
+                    if (Config.loopMap==1 and abs(tempX)+abs(tempY)<=Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and abs(tempX)+abs(tempY)<=Config.brushSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 1)
                 elif Config.brushType==2:
-                    if (Config.loopMap==1 and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize) or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize:
+                    if (Config.loopMap==1 and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and math.sqrt(math.pow(tempX, 2) + math.pow(tempY, 2))-0.2<=Config.brushSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 1)
     if keypress[K_3]:
         for tempX in range(-Config.brushSize,Config.brushSize+1):
             for tempY in range(-Config.brushSize,Config.brushSize+1):
                 if Config.brushType==0:
-                    if Config.loopMap==1 or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize:
+                    if Config.loopMap==1 or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 2)
                 elif Config.brushType==1:
-                    if (Config.loopMap==1 and abs(tempX)+abs(tempY)<=Config.brushSize) or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize and abs(tempX)+abs(tempY)<=Config.brushSize:
+                    if (Config.loopMap==1 and abs(tempX)+abs(tempY)<=Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and abs(tempX)+abs(tempY)<=Config.brushSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 2)
                 elif Config.brushType==2:
-                    if (Config.loopMap==1 and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize) or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize:
+                    if (Config.loopMap==1 and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and math.sqrt(math.pow(tempX, 2) + math.pow(tempY, 2))-0.2<=Config.brushSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 2)
     if keypress[K_4]:
         for tempX in range(-Config.brushSize,Config.brushSize+1):
             for tempY in range(-Config.brushSize,Config.brushSize+1):
                 if Config.brushType==0:
-                    if Config.loopMap==1 or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize:
+                    if Config.loopMap==1 or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 3)
                 elif Config.brushType==1:
-                    if (Config.loopMap==1 and abs(tempX)+abs(tempY)<=Config.brushSize) or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize and abs(tempX)+abs(tempY)<=Config.brushSize:
+                    if (Config.loopMap==1 and abs(tempX)+abs(tempY)<=Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and abs(tempX)+abs(tempY)<=Config.brushSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 3)
                 elif Config.brushType==2:
-                    if (Config.loopMap==1 and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize) or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize:
+                    if (Config.loopMap==1 and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and math.sqrt(math.pow(tempX, 2) + math.pow(tempY, 2))-0.2<=Config.brushSize:
                         Config.gameMap.setColor((Config.dotX+tempX)%Config.gameMap.xSize,(Config.dotY+tempY)%Config.gameMap.ySize, 3)
 
     #adjusts the brush size

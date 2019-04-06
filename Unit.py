@@ -51,6 +51,7 @@ class unit:
         self.setXPos(x)
         self.setYPos(y)
         self.setInPriorityQueue(1,0)
+
     def setInventory(self, resourceType, quantity):
         self.inventory[resourceType] += quantity
 
@@ -108,12 +109,13 @@ class unit:
         newTile.setStationedUnitID(self.unitID)
 
     def collectResource(self):
-
-        # Farms resource on the tile the unit is standing on. This is fired for all units on every tick, if it is possible for them to farm something.
+        # Farms resource on the tile the unit is standing on. This is fired for all units on every tick,
+        # if it is possible for them to farm something.
         currentTile = self.getCurrentTile() # TODO: add a function in Tile that lets us remove a resource from it and return it here.
         resourceData = currentTile.collectResource(1) #TODO: add a function to Tile called collectResource() that returns .type (resource type) and .amount.
         self.inventory[resourceData[0]] = self.inventory[resourceData[0]] + resourceData[1] #Add that to unit's inventory.
         #print("Farming resource. Quantity ", resourceData[1], " of type ", resourceData[0])
+
     def findClosestTileOfType(self, destinationTileType):
         #TODO: Basically this whole function.
         targetTile = None
@@ -125,7 +127,7 @@ class unit:
         tileFound = False
         for x in range(0,mapSizeX):  # This should check all tiles around the unit, then the ones around them, and so on, continuing farther out each time.
             for y in range(0,mapSizeY):
-                if tileFound == False:
+                if not tileFound:
                     tile = Config.gameMap.getTile(x,y)  # Right now we are using a much dumber algorithm to test with.
                     tileType = tile.getType()
                     #print(tileType, " vs ", destinationTileType)
@@ -136,7 +138,7 @@ class unit:
                         tileFound = True
                 else:
                     break
-            if tileFound == True:
+            if tileFound:
                 break
     def isUnitAtTargetPos(self): #Returns true if unit is at target position, returns false if it is not.
         return (self.getXPos() == self.getTargetXPos()) and (self.getYPos() == self.getTargetYPos())
@@ -148,7 +150,7 @@ class unit:
             if self.getTargetXPos() == None:
                 self.findClosestTileOfType(2) #sets as target
 
-            if self.isUnitAtTargetPos() == True: #If you are on the target tile, start collecting resources!
+            if self.isUnitAtTargetPos(): #If you are on the target tile, start collecting resources!
                 self.collectResource()
 
             #TODO: If one unit is heading toward a tile, should other units try heading somewhere else?

@@ -40,6 +40,9 @@ timeSeconds=0
 frameCount=0
 frameRate=0
 
+# Global constants
+MAX_UNIT_HUNGER = 100
+
 
 unitx4= pygame.image.load("Textures/4xUnit.bmp")
 unitx4.set_colorkey((255,0,255))
