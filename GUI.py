@@ -173,8 +173,8 @@ class BottomMenu:
             verticalOffset = self.verticalOffset
 
             for i in range(self.firstVisibleBox, self.firstVisibleBox + (self.numColumns * self.numRows)
-            if self.firstVisibleBox + (self.numColumns * self.numRows) < len(units.data)
-            else len(units.data)):
+                    if self.firstVisibleBox + (self.numColumns * self.numRows) < len(units.data)
+                    else len(units.data)):
                 pygame.draw.rect(surface, self.TEXT_COLOR, (self.width / 3 + horizontalOffset,
                                                             self.height + self.TEXT_OFFSET + verticalOffset,
                                                             self.boxSize, self.boxSize))
@@ -213,37 +213,48 @@ class BottomMenu:
     def changeSelectedUnit(self, change, units):
         if change == 1:
             self.selectedUnit = (self.selectedUnit + 1)
+            if self.selectedUnit >= len(units.data):
+                self.selectedUnit = 0
+                self.firstVisibleBox = 0
+            elif self.selectedUnit >= self.firstVisibleBox + (self.numColumns * self.numRows):
+                self.firstVisibleBox += self.numColumns
+
         elif change == -1:
             self.selectedUnit = (self.selectedUnit - 1)
-        elif change == 10:
-            self.selectedUnit -= self.numColumns
-        elif change == -10:
-            self.selectedUnit += self.numColumns
-
-        if self.selectedUnit < self.firstVisibleBox:
             if self.selectedUnit < 0:
-                if self.numColumns + self.selectedUnit + self.numColumns * \
-                                    (len(units.data) // self.numColumns) < len(units.data):
-                    self.firstVisibleBox = self.numColumns * (len(units.data) // self.numColumns)
-                    self.selectedUnit = self.numColumns + self.selectedUnit + self.numColumns * \
-                                        (len(units.data) // self.numColumns)
-                else:
-                    self.selectedUnit += self.numColumns
-
-            else:
+                self.selectedUnit = len(units.data) - 1
+                self.firstVisibleBox = self.numColumns * (len(units.data) // self.numColumns)
+            elif self.selectedUnit < self.firstVisibleBox:
                 self.firstVisibleBox -= self.numColumns
 
+        elif change == -10:
+            self.selectedUnit -= self.numColumns
+            if self.selectedUnit < self.firstVisibleBox:
+                if self.selectedUnit < 0:
+                    if self.numColumns + self.selectedUnit + self.numColumns * \
+                            (len(units.data) // self.numColumns) < len(units.data):
+                        self.firstVisibleBox = self.numColumns * (len(units.data) // self.numColumns)
+                        self.selectedUnit = self.numColumns + self.selectedUnit + self.numColumns * \
+                                            (len(units.data) // self.numColumns)
+                    else:
+                        self.selectedUnit += self.numColumns
 
-        elif self.selectedUnit >= self.firstVisibleBox + (self.numColumns * self.numRows):
-            if self.numColumns * (len(units.data) // self.numColumns) <=\
-                    self.selectedUnit - self.numColumns < len(units.data):
+                else:
+                    self.firstVisibleBox -= self.numColumns
 
-                self.firstVisibleBox = 0
-                self.selectedUnit = (self.selectedUnit - self.numColumns) % self.numColumns
-            elif self.selectedUnit < len(units.data):
-                self.firstVisibleBox += self.numColumns
-            else:
-                self.selectedUnit -= self.numColumns
+        elif change == 10:
+            self.selectedUnit += self.numColumns
+
+            if self.selectedUnit >= self.firstVisibleBox + (self.numColumns * self.numRows):
+                if self.numColumns * (len(units.data) // self.numColumns) <= \
+                        self.selectedUnit - self.numColumns < len(units.data):
+
+                    self.firstVisibleBox = 0
+                    self.selectedUnit = (self.selectedUnit - self.numColumns) % self.numColumns
+                elif self.selectedUnit < len(units.data):
+                    self.firstVisibleBox += self.numColumns
+                else:
+                    self.selectedUnit -= self.numColumns
 
         print(self.selectedUnit, self.firstVisibleBox)
 
