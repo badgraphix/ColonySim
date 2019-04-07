@@ -43,7 +43,7 @@ def drawUnit():
     mapLengthX=((Config.xlength)//Config.gameMap.xSize)+1
     mapTempY=-Config.offsetY//Config.gameMap.ySize
     mapLengthY=((Config.ylength)//Config.gameMap.ySize)+1
-    for temp in range(0,5):
+    for temp in range(0,Config.actors.totalActors):
         for mapX in range(mapTempX-1,mapLengthX+mapTempX+1):
             for mapY in range(mapTempY-1,mapLengthY+mapTempY+1):
                 pygame.draw.rect(Config.screen,(200,200,200),(5+Config.tileSize*((Config.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),5+Config.tileSize*(((Config.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),Config.tileSize//2)
