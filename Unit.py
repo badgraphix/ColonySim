@@ -50,6 +50,7 @@ class unit:
     hitPoints = 100
     # Hunger. When it hits 0, the unit will lose 1 HP every tick.
     hungerPoints = 100
+    thirstPoints = 100
     # Unit type. Represented as an integer that is used as the parameter for a getUnitData() function.
     unitType = 1
     # Inventory. Each entry in the array represents the quantity of that respective resource type. A unit can only hold ONE type of resource at a time, so keep this in mind while developing.
@@ -93,6 +94,15 @@ class unit:
 
     def getBehavior(self):
         return self.behavior
+
+    def getHungerPoints(self):
+        return self.hungerPoints
+
+    def getThirstPoints(self):
+        return self.thirstPoints
+
+    def getHitPoints(self):
+        return self.hitPoints
 
     def getXPos(self):
         return self.xPos
