@@ -13,16 +13,16 @@ import Config
 
 
 
-class Actor:
+class Buildings:
     data=[]
-    totalActors=0
+    totalBuildingss=0
     def __init__(self, num,x,y):
-        self.totalActors=num
+        self.totalBuildings=num
         for temp in range(0,num):
             buildingTemp=building(random.randint(0,x),random.randint(0,y), temp)
             self.data.append(buildingTemp)
     def allAct(self):
-        for temp in range(0,self.totalActors):
+        for temp in range(0,self.totalBuildings):
             self.data[temp].perform()
 
 

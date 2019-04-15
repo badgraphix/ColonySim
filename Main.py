@@ -1,13 +1,15 @@
 #Kevin Dunn, add names
 #CSC 305
 #Colony Sim Game: Main
-#4/2/2019
+#4/15/2019
 
 from Input import *
 from Display import *
 import Config
+from Building import *
 
 actors = Actor(Config.actors, Config.actorsx, Config.actorsy)
+buildings=Buildings(1,150,150)
 import time
 
 
