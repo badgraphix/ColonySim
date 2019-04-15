@@ -1,13 +1,15 @@
 #Kevin Dunn, add names
 #CSC 305
 #Colony Sim Game: Main
-#3/22/2019
+#4/2/2019
 
 from Input import *
 from Display import *
 import Config
 
 actors = Actor(Config.actors, Config.actorsx, Config.actorsy)
+import time
+
 
 def main():
 
@@ -31,7 +33,11 @@ def main():
         pygame.display.update()#update map once updated
 
         #game time
-        pygame.time.wait(Config.frameTime)#pause for a short while
+        tempTime=time.time()*1000
+        while(tempTime<Config.frameTime+90):
+            tempTime=time.time()*1000
+            pygame.time.wait(1)#pause for a short while
+        Config.frameTime=tempTime
 
     #If loops exits
     pygame.quit()
