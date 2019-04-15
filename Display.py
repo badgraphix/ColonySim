@@ -44,7 +44,7 @@ def drawUnit():
     mapLengthX=((Config.xlength)//Config.gameMap.xSize)+1
     mapTempY=-Config.offsetY//Config.gameMap.ySize
     mapLengthY=((Config.ylength)//Config.gameMap.ySize)+1
-    for temp in range(0,5):
+    for temp in range(0,Config.actors.totalActors):
         for mapX in range(mapTempX-1,mapLengthX+mapTempX+1):
             for mapY in range(mapTempY-1,mapLengthY+mapTempY+1):
                 Config.screen.blit(Config.unitImg,(5+Config.tileSize*((Main.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),5+Config.tileSize*(((Main.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize))
