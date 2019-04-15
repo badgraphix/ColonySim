@@ -11,6 +11,7 @@ import sys, random, os.path
 import math
 from Map import *
 from Unit import *
+from Building import *
 
 
 

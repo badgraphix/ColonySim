@@ -51,6 +51,19 @@ def drawUnit():
                 if Config.selectedUnitID==temp:
                     pygame.draw.rect(Config.screen,(200,200,200),(Config.tileSize*((Main.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),Config.tileSize*(((Main.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),Config.tileSize//8)
 
+def drawBuildings():
+    mapTempX=-Config.offsetX//Config.gameMap.xSize
+    mapLengthX=((Config.xlength)//Config.gameMap.xSize)+1
+    mapTempY=-Config.offsetY//Config.gameMap.ySize
+    mapLengthY=((Config.ylength)//Config.gameMap.ySize)+1
+    for temp in range(0,Main.buildings.totalBuildings):
+        for mapX in range(mapTempX-1,mapLengthX+mapTempX+1):
+            for mapY in range(mapTempY-1,mapLengthY+mapTempY+1):
+                Config.screen.blit(Config.baseImg,(Config.tileSize*((Main.buildings.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),Config.tileSize*(((Main.buildings.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize))
+                if Config.selectedUnitID==temp:
+                    pygame.draw.rect(Config.screen,(200,200,200),(Config.tileSize*((Main.buildings.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),Config.tileSize*(((Main.buildings.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),Config.tileSize//8)
+
+
 def drawText(X,Y,Text,size):
     fontDisplay= pygame.font.Font(Config.gameFont,size)
     textRender=fontDisplay.render(Text,False, (0,0,0))
@@ -94,6 +107,7 @@ def drawAll(): #Draws all the objects, will need an update when unit actors arri
                 pygame.draw.rect(Config.screen,(255-(255*(x+y)/(Config.xlength+Config.ylength)),255*x/Config.xlength,255*y/Config.ylength),(5+Config.tileSize*x,Config.tileSize*y,Config.tileSize,Config.tileSize),0)
     drawCursor()
     drawUnit()
+    drawBuildings()
     frameRate()
     if Config.pause==1:
         displayPause()

@@ -6,8 +6,10 @@
 from Input import *
 from Display import *
 import Config
+from Building import *
 
 actors = Actor(Config.actors, Config.actorsx, Config.actorsy)
+buildings=Buildings(1,150,150)
 import time
 
 
