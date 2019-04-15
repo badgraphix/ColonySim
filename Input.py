@@ -6,6 +6,7 @@
 import pygame
 from pygame.locals import *
 import Config
+import pickle
 
 #When a scale change takes place, all the sprites are set to the correct size
 def scaleSprites():

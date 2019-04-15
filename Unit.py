@@ -209,22 +209,22 @@ class unit:
                 min = fscores[0]
                 minind = 0
                 for i in range(0,4 - j):
-                    if(fscores[i] < min and !checked[i]):
+                    if(fscores[i] < min and not checked[i]):
                         min = fscores
                         minind = 0
                 checked[minind] = 1
 
                 if(minind == 0):
-                    recSearch(x + 1, y, g + 1, patharr += minind)
+                    recSearch(x + 1, y, g + 1, patharr.append(minind))
 
                 if(minind == 1):
-                    recSearch(x - 1, y, g + 1, patharr += minind)
+                    recSearch(x - 1, y, g + 1, patharr.append(minind))
 
                 if(minind == 2):
-                    recSearch(x, y + 1, g + 1, patharr += minind)
+                    recSearch(x, y + 1, g + 1, patharr.append(minind))
 
                 if(minind == 3):
-                    recSearch(x, y - 1, g + 1, patharr += minind)
+                    recSearch(x, y - 1, g + 1, patharr.append(minind))
 
 
         #get the target x and y values for each unit

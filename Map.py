@@ -26,4 +26,5 @@ class gMap:#class for map, comtains size information, and a list of all tiles wi
     def setColor(self, xInd,yInd,num):
         return self.data[yInd*self.xSize+xInd].setType(num)
     def getTile(self,xInd,yInd):
+        #print()
         return self.data[yInd*self.xSize+xInd]
