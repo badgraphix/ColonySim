@@ -153,6 +153,7 @@ $RECYCLE.BIN/
 
 #Personal testing file
 test.py
+test.pyw
 
 #Pycache folder
 __pycache__

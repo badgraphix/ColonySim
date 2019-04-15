@@ -152,6 +152,7 @@ class BottomMenu:
     menuHeight = 0
 
     def __init__(self, width, height, coverage=.2):
+        print("Called", self, width, height)
         self.trueHeight = height
         self.height = height * (1 - coverage)
         self.width = width
@@ -335,7 +336,7 @@ class BottomMenu:
         columns = 0
         totalSpace = 0
 
-        while totalSpace + self.boxSize < self.width / 3:
+        while totalSpace + self.boxSize + 10 < self.width / 3:
             columns += 1
             totalSpace += self.boxSize + 10
 
