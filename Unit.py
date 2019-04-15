@@ -115,8 +115,9 @@ class unit:
 
     def getCurrentTile(self):
         # TODO: Create getTile(x, y) in gMap.
-        return Config.gameMap.getTile(self.getXPos(), self.getYPos())  # .tileType (between 0 and 4)
-
+        return self.getTileOfPos(self.getXPos(), self.getYPos())  # .tileType (between 0 and 4)
+    def getTileOfPos(self,x,y):
+        return Config.gameMap.getTile(x, y)
     def setXPos(self, val):
         self.xPos = val
 
