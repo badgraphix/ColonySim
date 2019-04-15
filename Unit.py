@@ -34,6 +34,12 @@ class FarmerStrategy:
 class WoodcutterStrategy:
     focusTileTypes = [1] #Forest
 
+class WaterCollectorStrategy:
+    focusTileTypes = [2] #Water
+
+class StoneCollectorStrategy:
+    focusTileTypes = [3] #Mountain
+
 class SoldierStrategy:
     focusTileTypes = None
 
@@ -57,7 +63,7 @@ class unit:
     inventory = [0, 0, 0, 0, 0, 0]
     behavior = 0  # Each behavior type is currently stored as an int. 0 is standby mode, where the unit will not perform any actions.
     targetTile = None  # Specifies where the unit is heading towards. Does not always contain a value.
-    priorityQueue = [1,2,4,3]
+    priorityQueue = [FarmerStrategy, WoodcutterStrategy, WaterCollectorStrategy, StoneCollectorStrategy, SoldierStrategy, IdleStrategy]
 
     def __init__(self, x, y, unitID):
         self.unitID = unitID
@@ -67,17 +73,8 @@ class unit:
     def setInventory(self, resourceType, quantity):
         self.inventory[resourceType] += quantity
 
-    def getCurrentStrategy(self,index):
-        if index == None:
-            index = 0
-        if self.priorityQueue[index] == 1:
-            return FarmerStrategy
-        elif self.priorityQueue[index] == 2:
-           return WoodcutterStrategy
-        elif self.priorityQueue[index] == 3:
-            return SoldierStrategy
-        elif self.priorityQueue[index] == 4:
-            return IdleStrategy
+    def getCurrentStrategy(self,index): #Returns the current strategy at the specified index in the priority queue.
+       return self.priorityQueue[index]
     def setBehavior(self, behaviorType):
         self.behavior = behaviorType
 
