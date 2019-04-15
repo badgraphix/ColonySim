@@ -110,12 +110,12 @@ class unit:
         newTile.setStationedUnitID(self.unitID)
 
     def collectResource(self):
-
         # Farms resource on the tile the unit is standing on. This is fired for all units on every tick, if it is possible for them to farm something.
         currentTile = self.getCurrentTile() # TODO: add a function in Tile that lets us remove a resource from it and return it here.
         resourceData = currentTile.collectResource(1) #TODO: add a function to Tile called collectResource() that returns .type (resource type) and .amount.
         self.inventory[resourceData[0]] = self.inventory[resourceData[0]] + resourceData[1] #Add that to unit's inventory.
         #print("Farming resource. Quantity ", resourceData[1], " of type ", resourceData[0])
+        
     def findClosestTileOfType(self, destinationTileType):
         #TODO: Basically this whole function.
         targetTile = None
@@ -140,6 +140,68 @@ class unit:
                     break
             if tileFound == True:
                 break
+
+    def pathfind(tileType):
+        path = []
+        
+        #calculate the distance from the current tile to the target
+        def calcH(x, y, targX, targY):
+            return sqrt((abs(targX - x)**2) + (abs(targY - y)**2))          
+
+        #x and y are (x,y) g is distance from start pos(can be used to limit runtime), patharris a list of directions generated with recursive backtracking
+        def recSearch(x, y, g, patharr):
+            #base cases to terminate recursion
+            if(0):
+                patharr.pop(-1)
+                return # case for if current tile its checking is impassable //get clarification\\
+
+            if(g >= 50):
+                return #limiting run time
+            
+            if(x == targetXPos and y == targetYPos): # if we found a way to the target pos
+                return patharr
+
+            #calc f score for the 4 surrounding tiles put to a list
+            fscores = []
+            fscores += (g + 1) + calcH(xPos + 1, yPos)    #[0] right
+            fscores += (g + 1) + calcH(xPos - 1, yPos)    #[1] left
+            fscores += (g + 1) + calcH(xPos, yPos + 1)    #[2] up
+            fscores += (g + 1) + calcH(xPos, yPos - 1)    #[3] down
+            
+            checked = [0,0,0,0]
+            
+            for j in range(0,4):
+                min = fscores[0]
+                minind = 0
+                for i in range(0,4 - j):
+                    if(fscores[i] < min and !checked[i]):
+                        min = fscores
+                        minind = 0
+                checked[minind] = 1
+
+                if(minind == 0):
+                    recSearch(x + 1, y, g + 1, patharr += minind)
+
+                if(minind == 1):
+                    recSearch(x - 1, y, g + 1, patharr += minind)
+
+                if(minind == 2):
+                    recSearch(x, y + 1, g + 1, patharr += minind)
+
+                if(minind == 3):
+                    recSearch(x, y - 1, g + 1, patharr += minind)
+                
+        
+        #get the target x and y values for each unit
+        findClosestTileOfType(self, tileType)
+
+        #xPos yPos denote unit position, targetXPos and targetYPos denote destination
+
+
+        
+        
+        
+        
     def isUnitAtTargetPos(self): #Returns true if unit is at target position, returns false if it is not.
         return (self.getXPos() == self.getTargetXPos()) and (self.getYPos() == self.getTargetYPos())
 
