@@ -68,7 +68,7 @@ class tile(object):  # class for tiles, mostly a placeholder/template for tile g
                 self.numWood = 0
                 return (self.tileType, amountRetrieved)
         if self.tileType == 2:
-            print("WATER IS ", self.numWater)
+            #print("WATER IS ", self.numWater)
             if self.numWater >= amount:
                 self.numWater = self.numWater - amount
                 return (self.tileType, amount)

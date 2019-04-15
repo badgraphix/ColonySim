@@ -76,8 +76,12 @@ def inputEditor():
     if pygame.event.peek(QUIT) or keypress[K_ESCAPE]:
         Config.stop=1
     
-    Config.offsetX-=(keypress[K_RIGHT]-keypress[K_LEFT])*(32//Config.tileSize+1)#arrow keys are used to pan around the world
-    Config.offsetY-=(keypress[K_DOWN]-keypress[K_UP])*(32//Config.tileSize+1)#^^
+    Config.subTileX-=(keypress[K_RIGHT]-keypress[K_LEFT])*(32//Config.tileSize+5)*3#arrow keys are used to pan around the world
+    Config.subTileY-=(keypress[K_DOWN]-keypress[K_UP])*(32//Config.tileSize+5)*3#^^
+    Config.offsetX+=Config.subTileX//Config.tileSize
+    Config.offsetY+=Config.subTileY//Config.tileSize
+    Config.subTileX=Config.subTileX%Config.tileSize
+    Config.subTileY=Config.subTileY%Config.tileSize
     Config.dotX=(Config.dotX-(keypress[K_a]-keypress[K_d]))%Config.gameMap.xSize#wasd are used to move the cursor around, the black tile
     Config.dotY=(Config.dotY-(keypress[K_w]-keypress[K_s]))%Config.gameMap.ySize#^^
 

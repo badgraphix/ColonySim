@@ -44,7 +44,7 @@ def drawUnit():
     mapLengthX=((Config.xlength)//Config.gameMap.xSize)+1
     mapTempY=-Config.offsetY//Config.gameMap.ySize
     mapLengthY=((Config.ylength)//Config.gameMap.ySize)+1
-    for temp in range(0,5):
+    for temp in range(0,Config.actors.totalActors):
         for mapX in range(mapTempX-1,mapLengthX+mapTempX+1):
             for mapY in range(mapTempY-1,mapLengthY+mapTempY+1):
                 Config.screen.blit(Config.unitImg,(Config.tileSize*((Config.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),Config.tileSize*(((Config.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize))
@@ -75,19 +75,19 @@ def displayPause():
 #Kevin's
 def drawAll(): #Draws all the objects, will need an update when unit actors arrive
     #Config.screen.fill((0,200,0))
-    for x in range(0,Config.xlength):
-        for y in range(0,Config.ylength):
+    for x in range(-1,Config.xlength):
+        for y in range(-1,Config.ylength):
             if Config.loopMap==1 or Config.gameMap.xSize+Config.offsetX>x and Config.offsetX<=x and Config.gameMap.ySize+Config.offsetY>y and Config.offsetY<=y:
                 if Config.gameMap.getTile((x-Config.offsetX)%(Config.gameMap.xSize),(y-Config.offsetY)%(Config.gameMap.ySize)).tileType==0:
-                    Config.screen.blit(Config.grassImg,(Config.tileSize*x,Config.tileSize*y))
+                    Config.screen.blit(Config.grassImg,(Config.tileSize*x+Config.subTileX,Config.tileSize*y+Config.subTileY))
                 elif Config.gameMap.getTile((x-Config.offsetX)%(Config.gameMap.xSize),(y-Config.offsetY)%(Config.gameMap.ySize)).tileType==1:
-                    Config.screen.blit(Config.woodsImg,(Config.tileSize*x,Config.tileSize*y))
+                    Config.screen.blit(Config.woodsImg,(Config.tileSize*x+Config.subTileX,Config.tileSize*y+Config.subTileY))
                 elif Config.gameMap.getTile((x-Config.offsetX)%(Config.gameMap.xSize),(y-Config.offsetY)%(Config.gameMap.ySize)).tileType==2:
-                    Config.screen.blit(Config.waterImg,(Config.tileSize*x,Config.tileSize*y))
+                    Config.screen.blit(Config.waterImg,(Config.tileSize*x+Config.subTileX,Config.tileSize*y+Config.subTileY))
                 elif Config.gameMap.getTile((x-Config.offsetX)%(Config.gameMap.xSize),(y-Config.offsetY)%(Config.gameMap.ySize)).tileType==3:
-                    Config.screen.blit(Config.rocksImg,(Config.tileSize*x,Config.tileSize*y))
+                    Config.screen.blit(Config.rocksImg,(Config.tileSize*x+Config.subTileX,Config.tileSize*y+Config.subTileY))
                 elif Config.gameMap.getTile((x-Config.offsetX)%(Config.gameMap.xSize),(y-Config.offsetY)%(Config.gameMap.ySize)).tileType==4:
-                    Config.screen.blit(Config.farmsImg,(Config.tileSize*x,Config.tileSize*y))
+                    Config.screen.blit(Config.farmsImg,(Config.tileSize*x+Config.subTileX,Config.tileSize*y+Config.subTileY))
                 else:
                     pygame.draw.rect(Config.screen,Config.gameMap.getColor((x-Config.offsetX)%(Config.gameMap.xSize),(y-Config.offsetY)%(Config.gameMap.ySize)),(Config.tileSize*x,5+Config.tileSize*y,Config.tileSize,Config.tileSize),0)
             else:#else background rainbow

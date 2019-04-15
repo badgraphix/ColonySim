@@ -17,9 +17,8 @@ from Main import *
 
 
 #GlobalVariables
-#screen=pygame.display.set_mode((1024,512))
+#screen=pygame.display.set_mode((1024,512), pygame.RESIZABLE)
 screen=pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-
 tileSize=32 #length side of square tile, again multiple of two for scalability
 xlength=(screen.get_width())//32+1 #height and width of the window in tiles, a multiple of 2 for zoomability scale issues
 ylength=(screen.get_height())//32+1 #^^ 
@@ -27,6 +26,8 @@ dotX=5 #position of "cursor" black square for map editing
 dotY=5 #^^  Will most likely be moved into an actor class by the unit guy
 offsetX=0 #shift of the map and actors on the grid, used to pan the screen, shifted in tiles not pixels
 offsetY=0 #^^
+subTileX=0 #offset in pixles
+subTileY=0
 brushSize=0#brush size for editor
 brushType=0#shape of brush 
 frameTime=0 #Save time of last frame
