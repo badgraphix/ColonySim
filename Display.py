@@ -30,13 +30,13 @@ def drawCursor():#draws the cursor, with brush size and shape, in all loops of t
                         for tempY in range(-Config.brushSize,Config.brushSize+1):
                             if Config.brushType==0:
                                 if Config.loopMap==1 or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize:
-                                    pygame.draw.rect(Config.screen,(0,0,0),(Config.tileSize*((Config.dotX%Config.gameMap.xSize+tempX+Config.offsetX)+(mapX*Config.gameMap.xSize)),Config.tileSize*(((Config.dotY%Config.gameMap.ySize+tempY+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),Config.tileSize//8)
+                                    pygame.draw.rect(Config.screen,(0,0,0),(Config.tileSize*((Config.dotX%Config.gameMap.xSize+tempX+Config.offsetX)+(mapX*Config.gameMap.xSize))+Config.subTileX,Config.tileSize*(((Config.dotY%Config.gameMap.ySize+tempY+Config.offsetY)+(mapY*Config.gameMap.ySize)))+Config.subTileY,Config.tileSize,Config.tileSize),Config.tileSize//8)
                             elif Config.brushType==1:
                                 if (Config.loopMap==1 and abs(tempX)+abs(tempY)<=Config.brushSize) or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize and abs(tempX)+abs(tempY)<=Config.brushSize:
-                                    pygame.draw.rect(Config.screen,(100,0,0),(Config.tileSize*((Config.dotX%Config.gameMap.xSize+tempX+Config.offsetX)+(mapX*Config.gameMap.xSize)),Config.tileSize*(((Config.dotY%Config.gameMap.ySize+tempY+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),Config.tileSize//8)
+                                    pygame.draw.rect(Config.screen,(100,0,0),(Config.tileSize*((Config.dotX%Config.gameMap.xSize+tempX+Config.offsetX)+(mapX*Config.gameMap.xSize))+Config.subTileX,Config.tileSize*(((Config.dotY%Config.gameMap.ySize+tempY+Config.offsetY)+(mapY*Config.gameMap.ySize)))+Config.subTileY,Config.tileSize,Config.tileSize),Config.tileSize//8)
                             elif Config.brushType==2:
                                 if (Config.loopMap==1 and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize) or Config.dotY+tempY>=0 and Config.dotY+tempY<Config.gameMap.ySize and Config.dotX+tempX>=0 and Config.dotX+tempX<Config.gameMap.xSize and math.sqrt(math.pow(tempX,2)+math.pow(tempY,2))-0.2<=Config.brushSize:
-                                    pygame.draw.rect(Config.screen,(50,0,100),(Config.tileSize*((Config.dotX%Config.gameMap.xSize+tempX+Config.offsetX)+(mapX*Config.gameMap.xSize)),Config.tileSize*(((Config.dotY%Config.gameMap.ySize+tempY+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),Config.tileSize//8)
+                                    pygame.draw.rect(Config.screen,(50,0,100),(Config.tileSize*((Config.dotX%Config.gameMap.xSize+tempX+Config.offsetX)+(mapX*Config.gameMap.xSize))+Config.subTileX,Config.tileSize*(((Config.dotY%Config.gameMap.ySize+tempY+Config.offsetY)+(mapY*Config.gameMap.ySize)))+Config.subTileY,Config.tileSize,Config.tileSize),Config.tileSize//8)
 
 #Units
 def drawUnit():
@@ -47,9 +47,9 @@ def drawUnit():
     for temp in range(0,Main.actors.totalActors):
         for mapX in range(mapTempX-1,mapLengthX+mapTempX+1):
             for mapY in range(mapTempY-1,mapLengthY+mapTempY+1):
-                Config.screen.blit(Config.unitImg,(Config.tileSize*((Main.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),Config.tileSize*(((Main.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize))
+                Config.screen.blit(Config.unitImg,(Config.tileSize*((Main.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize))+Config.subTileX,Config.tileSize*(((Main.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize)))+Config.subTileY,Config.tileSize,Config.tileSize))
                 if Config.selectedUnitID==temp:
-                    pygame.draw.rect(Config.screen,(200,200,200),(Config.tileSize*((Main.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),Config.tileSize*(((Main.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),Config.tileSize//8)
+                    pygame.draw.rect(Config.screen,(200,200,200),(Config.tileSize*((Main.actors.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize))+Config.subTileX,Config.tileSize*(((Main.actors.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize)))+Config.subTileY,Config.tileSize,Config.tileSize),Config.tileSize//8)
 
 def drawBuildings():
     mapTempX=-Config.offsetX//Config.gameMap.xSize
@@ -59,9 +59,9 @@ def drawBuildings():
     for temp in range(0,Main.buildings.totalBuildings):
         for mapX in range(mapTempX-1,mapLengthX+mapTempX+1):
             for mapY in range(mapTempY-1,mapLengthY+mapTempY+1):
-                Config.screen.blit(Config.baseImg,(Config.tileSize*((Main.buildings.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),Config.tileSize*(((Main.buildings.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize))
+                Config.screen.blit(Config.baseImg,(Config.tileSize*((Main.buildings.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize))+Config.subTileX,Config.tileSize*(((Main.buildings.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize)))+Config.subTileY,Config.tileSize,Config.tileSize))
                 if Config.selectedUnitID==temp:
-                    pygame.draw.rect(Config.screen,(200,200,200),(Config.tileSize*((Main.buildings.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize)),Config.tileSize*(((Main.buildings.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize))),Config.tileSize,Config.tileSize),Config.tileSize//8)
+                    pygame.draw.rect(Config.screen,(200,200,200),(Config.tileSize*((Main.buildings.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize))+Config.subTileX,Config.tileSize*(((Main.buildings.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize)))+Config.subTileY,Config.tileSize,Config.tileSize),Config.tileSize//8)
 
 
 def drawText(X,Y,Text,size):
