@@ -4,21 +4,25 @@
 # 4/2/2019
 
 
-import pickle
-import pygame
-from pygame.locals import *
-import sys, random, os.path
-import math
 from Map import *
 from Unit import *
 from Building import *
+import GUI
 
 # GlobalVariables
-screen=pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
-# screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+gameFont = pygame.font.match_font('arial')
+
+screenXSize = 1280
+screenYSize = 720
+
+screen = pygame.display.set_mode((screenXSize, screenYSize), pygame.RESIZABLE)
+bottomMenu = GUI.BottomMenu(screenXSize, screenYSize)
+
 tileSize = 32  # length side of square tile, again multiple of two for scalability
 xlength = (screen.get_width()) // 32 + 1  # height and width of the window in tiles, a multiple of 2 for zoomability scale issues
 ylength = (screen.get_height()) // 32 + 1  # ^^
+
+
 dotX = 5  # position of "cursor" black square for map editing
 dotY = 5  # ^^  Will most likely be moved into an actor class by the unit guy
 offsetX = 0  # shift of the map and actors on the grid, used to pan the screen, shifted in tiles not pixels
@@ -37,8 +41,6 @@ gameMap = gMap(150, 150)  # creates the map object, change sizes here to resize 
 actors = 5  # Actor(5,150,150)
 actorsx = 150
 actorsy = 150
-# screen=pygame.display.set_mode((tileSize*xlength+10,tileSize*ylength+10))
-gameFont = pygame.font.match_font('arial')
 timeSeconds = 0
 frameCount = 0
 frameRate = 0
@@ -112,3 +114,11 @@ farmsx32 = pygame.image.load("Textures/32xFarms.bmp")
 farmsx64 = pygame.image.load("Textures/64xFarms.bmp")
 farmsx128 = pygame.image.load("Textures/128xFarms.bmp")
 farmsImg = farmsx32
+
+# Global constants
+MAX_UNIT_HUNGER = 100
+
+# Setting up the screen and the bottom menu
+
+
+
