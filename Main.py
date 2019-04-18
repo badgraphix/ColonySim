@@ -4,15 +4,20 @@
 # 3/22/2019
 
 import sys
-from Unit import *
-from Display import *
+import Unit
+import building
 import Config
 
-actors = Actor(Config.actors, Config.actorsx, Config.actorsy)
+from Display import *
 
+actors = None
+buildings = None
 
 def main():
     pygame.init()
+
+    Main.actors = Unit.Actor(Config.actors, Config.actorsx, Config.actorsy)
+    Main.buildings = building.Actor(Config.actors, Config.actorsx, Config.actorsy)
 
     if Config.loadMap == 1:
         with open("Saves/Save.txt", "rb") as fp:
@@ -24,7 +29,7 @@ def main():
         inputEditor()
 
         if Config.pause == 0:
-            actors.allAct()
+            Main.actors.allAct()
 
         drawAll()  # call the draw map function
         pygame.display.update()  # update map once updated

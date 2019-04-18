@@ -152,7 +152,6 @@ class BottomMenu:
     menuHeight = 0
 
     def __init__(self, width, height, coverage=.2):
-        print("Called", self, width, height)
         self.trueHeight = height
         self.height = height * (1 - coverage)
         self.width = width
@@ -184,7 +183,7 @@ class BottomMenu:
         self.hungerText = self.rightFont.render("Hunger", True, self.TEXT_COLOR)
         self.thirstText = self.rightFont.render("Thirst", True, self.TEXT_COLOR)
 
-    def draw(self, surface, units):
+    def draw(self, surface, units, buildings):
         # Drawing the rectangles to form the base of the menu
         pygame.draw.rect(surface, self.BACKGROUND_COLOR, [0, self.height, self.width / 3 - 2, self.height])
         pygame.draw.rect(surface, self.BACKGROUND_COLOR, [self.width / 3,
@@ -202,9 +201,37 @@ class BottomMenu:
 
         # Conditional drawing
 
-        # If mode==1, meaning we want the building view
+        # If mode == 1, meaning we want the building view
+        if self.mode == 1:
+            horizontalOffset = self.horizontalOffset
+            verticalOffset = self.verticalOffset
 
-        # If mode==2, meaning we want the unit view
+            for i in range(self.firstVisibleBox, self.firstVisibleBox + (self.numColumns * self.numRows)
+            if self.firstVisibleBox + (self.numColumns * self.numRows) < len(buildings.data)
+            else len(buildings.data)):
+                pygame.draw.rect(surface, self.TEXT_COLOR, (self.width / 3 + horizontalOffset,
+                                                            self.height + self.TEXT_OFFSET + verticalOffset,
+                                                            self.boxSize, self.boxSize))
+
+                if buildings.data[i] == buildings.data[self.selectedUnit]:
+                    pygame.draw.rect(surface, pygame.Color(255, 0, 0), (self.width / 3 + horizontalOffset - 2,
+                                                                        self.height + self.TEXT_OFFSET + verticalOffset - 2,
+                                                                        self.boxSize + 2, self.boxSize + 2), 2)
+
+                    self.topBar.draw(surface, buildings.data[i].hitPoints / Config.MAX_UNIT_HUNGER)
+                    self.middleBar.draw(surface, buildings.data[i].inventory[0] / Config.MAX_UNIT_HUNGER)
+
+                    textX = self.topBar.x + self.width / 6 + self.width / 72
+                    surface.blit(self.healthText, (textX, self.topBar.y - self.barHeight / 4))
+                    surface.blit(self.hungerText, (textX, self.topBar.y - self.barHeight / 4 +
+                                                   self.middleBar.y - self.topBar.y))
+
+                horizontalOffset += 50
+                if self.width / 3 + horizontalOffset + self.boxSize > 2 * self.width / 3:
+                    verticalOffset += 50
+                    horizontalOffset = self.horizontalOffset
+
+        # If mode == 2, meaning we want the unit view
         if self.mode == 2:
             horizontalOffset = self.horizontalOffset
             verticalOffset = self.verticalOffset
@@ -226,9 +253,11 @@ class BottomMenu:
                     self.bottomBar.draw(surface, units.data[i].thirstPoints / Config.MAX_UNIT_HUNGER)
 
                     textX = self.topBar.x + self.width / 6 + self.width / 72
-                    surface.blit(self.healthText, (textX, self.height + self.menuHeight / 21))
-                    surface.blit(self.hungerText, (textX, self.height + 2 * self.menuHeight / 21 + self.barHeight))
-                    surface.blit(self.thirstText, (textX, self.height + 3 * self.menuHeight / 21 + 2 * self.barHeight))
+                    surface.blit(self.healthText, (textX, self.topBar.y - self.barHeight / 4))
+                    surface.blit(self.hungerText, (textX, self.topBar.y - self.barHeight / 4 +
+                                                   self.middleBar.y - self.topBar.y))
+                    surface.blit(self.thirstText, (textX, self.topBar.y - self.barHeight / 4 +
+                                                   self.bottomBar.y - self.topBar.y))
 
                     behaviorBoxDimension = self.height / 16
 
@@ -271,9 +300,44 @@ class BottomMenu:
         if mode == 1:
             self.mode = 1
             self.centerText = self.middleFont.render("Building List", True, self.TEXT_COLOR)
+
+            spacing = self.calculateVerticalSpacing(2, self.barHeight)
+
+            self.topBar = Bar(self.TEXT_COLOR, pygame.Color(0, 255, 0), "Top Bar",
+                              (2 * self.width / 3) + self.width / 120,
+                              self.height + spacing - spacing / 2, self.width / 6, self.barHeight)
+            self.middleBar = Bar(self.TEXT_COLOR, pygame.Color(0, 255, 0), "Top Bar",
+                                 (2 * self.width / 3) + self.width / 120,
+                                 self.height + spacing + self.height / 24 + self.height / 48,
+                                 self.width / 6, self.barHeight)
+
+            self.rightFont = pygame.font.Font(Config.gameFont,
+                                              self.sizeFont(self.width / 24, self.height / 6, "Hunger"))
+            self.healthText = self.rightFont.render("Health", True, self.TEXT_COLOR)
+            self.hungerText = self.rightFont.render("Inventory", True, self.TEXT_COLOR)
+
         elif mode == 2:
             self.mode = 2
             self.centerText = self.middleFont.render("Unit List", True, self.TEXT_COLOR)
+
+            spacing = self.calculateVerticalSpacing(4, self.barHeight)
+
+            self.topBar = Bar(self.TEXT_COLOR, pygame.Color(0, 255, 0), "Top Bar",
+                              (2 * self.width / 3) + self.width / 120,
+                              self.height + spacing, self.width / 6, self.barHeight)
+            self.middleBar = Bar(self.TEXT_COLOR, pygame.Color(0, 255, 0), "Top Bar",
+                                 (2 * self.width / 3) + self.width / 120,
+                                 self.height + 2 * spacing + self.height / 32, self.width / 6, self.barHeight)
+            self.bottomBar = Bar(self.TEXT_COLOR, pygame.Color(0, 255, 255), "Top Bar",
+                                 (2 * self.width / 3) + self.width / 120,
+                                 self.height + 3 * spacing + 2 * self.height / 32, self.width / 6, self.barHeight)
+
+            self.rightFont = pygame.font.Font(Config.gameFont,
+                                              self.sizeFont(self.width / 24, self.height / 6, "Hunger"))
+            self.healthText = self.rightFont.render("Health", True, self.TEXT_COLOR)
+            self.hungerText = self.rightFont.render("Hunger", True, self.TEXT_COLOR)
+            self.thirstText = self.rightFont.render("Thirst", True, self.TEXT_COLOR)
+
         else:
             self.mode = 3
             self.centerText = self.middleFont.render("Colony Overview", True, self.TEXT_COLOR)

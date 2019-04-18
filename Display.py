@@ -119,6 +119,6 @@ def drawAll():  # Draws all the objects
     drawCursor()
     drawUnit()
     frameRate()
-    Config.bottomMenu.draw(Config.screen, Main.actors)
+    Config.bottomMenu.draw(Config.screen, Main.actors, Main.buildings)
     if Config.pause == 1:
         displayPause()
