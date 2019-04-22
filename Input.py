@@ -60,6 +60,10 @@ def scaleSprites():
         Config.rocksImg=Config.rocksx128
         Config.farmsImg=Config.farmsx128
 
+
+def swapWindowed():
+    Config.screen=pygame.display.set_mode((0,0), pygame.RESIZABLE)
+
 def testSelect():
     Config.selectedUnitID=Config.gameMap.getTile(Config.dotX,Config.dotY).getStationedUnitID()
 
@@ -173,6 +177,9 @@ def inputEditor():
         Config.offsetY+=Config.ylength//4
         scaleSprites()
 
+    if keypress[K_b]:
+        swapWindowed()
+    
     #'9' is used to save the game to a text file, '0' is used to load the save, to save long term, make sure to make a copy of this file elsewhere.
     if keypress[K_9]:
         with open("Saves/Save.txt","wb") as fp:
