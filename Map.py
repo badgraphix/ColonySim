@@ -19,11 +19,12 @@ class gMap:#class for map, comtains size information, and a list of all tiles wi
         self.ySize=y
         self.data= []
         for total in range(0,self.xSize*self.ySize):
-            newTile=tile(total%5,0,0,0,0)#oh, by default, the map populates with all tile types alternating.
+            newTile=tile(total%5,0,0,0,0,0)#oh, by default, the map populates with all tile types alternating.
             self.data.append(newTile)
     def getColor(self, xInd,yInd):
         return self.data[yInd*self.xSize+xInd].color()
     def setColor(self, xInd,yInd,num):
         return self.data[yInd*self.xSize+xInd].setType(num)
     def getTile(self,xInd,yInd):
+        #print()
         return self.data[yInd*self.xSize+xInd]
