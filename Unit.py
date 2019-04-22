@@ -19,6 +19,7 @@ class Actor:
     def __init__(self, num,x,y):
         self.totalActors=num
         for temp in range(0,num):
+            #TODO: Make sure they don't spawn on non-traversable terrain.
             unitTemp=unit(random.randint(0,x),random.randint(0,y), temp)
             self.data.append(unitTemp)
     def allAct(self):
@@ -69,6 +70,7 @@ class unit:
         self.unitID = unitID
         self.setXPos(x)
         self.setYPos(y)
+        self.translatePosition(self,0,0)
         #self.setInPriorityQueue(1,0)
     def setInventory(self, resourceType, quantity):
         self.inventory[resourceType] += quantity
