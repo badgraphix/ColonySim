@@ -116,6 +116,9 @@ def drawAll():  # Draws all the objects
                 elif Config.gameMap.getTile((x - Config.offsetX) % Config.gameMap.xSize,
                                             (y - Config.offsetY) % Config.gameMap.ySize).tileType == 3:
                     Config.screen.blit(Config.rocksImg, (5 + Config.tileSize * x, 5 + Config.tileSize * y))
+                elif Config.gameMap.getTile((x - Config.offsetX) % Config.gameMap.xSize,
+                                            (y - Config.offsetY) % Config.gameMap.ySize).tileType == 4:
+                    Config.screen.blit(Config.farmsImg, (5 + Config.tileSize * x, 5 + Config.tileSize * y))
                 else:
                     pygame.draw.rect(Config.screen,
                                      Config.gameMap.getColor((x - Config.offsetX) % Config.gameMap.xSize,

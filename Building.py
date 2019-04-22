@@ -18,7 +18,7 @@ class Buildings:
     def __init__(self, num,x,y):
         self.totalBuildings=num
         for temp in range(0,num):
-            buildingTemp=building(random.randint(0,x),random.randint(0,y), temp)
+            buildingTemp=building(random.randint(0,x),random.randint(0,y),temp,1)
             self.data.append(buildingTemp)
 
     def allAct(self):
@@ -42,9 +42,8 @@ class building:
         self.setXPos(x)
         self.setbuildingType = buildtype
         self.setYPos(y)
-        self.setInPriorityQueue(1,0)
     def setInventory(self, resourceType, quantity):
-        if (validateinventorytype(self,resourceType) == True:
+        if (validateinventorytype(resourceType) == True) :
             self.inventory[resourceType] += quantity
     def getInventory(self):
         return self.inventory
@@ -71,13 +70,6 @@ class building:
     def setYPos(self, val):
         self.yPos = val
 
-    def translatePosition(self, x, y):
-        currentTile = Config.gameMap.getTile(self.getXPos(), self.getYPos())
-        currentTile.setStationedbuildingID(-1)
-        self.xPos += x
-        self.yPos += y
-        newTile = Config.gameMap.getTile(self.getXPos(), self.getYPos())
-        newTile.setStationedbuildingID(self.buildingID)
     def assignbuildingtype(buildtype, self):
         buildingType = buildtype
 
@@ -87,7 +79,7 @@ class building:
     def validateinventorytype(self, resourceType):
         if self.buildingType == 1:
             return True
-        else if (self.buildingType == resourceType):
+        elif (self.buildingType == resourceType):
             return True
         else:
             return False
