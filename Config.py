@@ -11,6 +11,7 @@ import GUI
 
 # GlobalVariables
 gameFont = pygame.font.match_font('arial')
+gameMode = 1
 
 screenXSize = 1280
 screenYSize = 720
