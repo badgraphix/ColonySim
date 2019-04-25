@@ -27,4 +27,8 @@ class gMap:#class for map, comtains size information, and a list of all tiles wi
         return self.data[yInd*self.xSize+xInd].setType(num)
     def getTile(self,xInd,yInd):
         #print()
-        return self.data[yInd*self.xSize+xInd]
+        pos = yInd*self.xSize+xInd
+        if pos >= len(self.data): #OOB exceptions are handled by returning no data.
+            return None
+        else:
+            return self.data[pos]

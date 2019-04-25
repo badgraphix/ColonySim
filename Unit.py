@@ -9,9 +9,6 @@ from pygame.locals import *
 import sys, random, os.path
 import math
 from Tile import *
-from Unit import *
-
-
 
 class Actor:
     data=[]
@@ -25,6 +22,10 @@ class Actor:
     def allAct(self):
         for temp in range(0,self.totalActors):
             self.data[temp].perform()
+    def setup(self): #We can't do this in init for some weird reason involving import statements. During the init function, if you reference Config it says it's not defined. This is the workaround.
+        for u in self.data:
+            u.translatePosition(0,0)
+
 
 
 #focusTileTypes: when pathfinding, the unit will move towards the closest tile that is one of these type
@@ -70,7 +71,7 @@ class unit:
         self.unitID = unitID
         self.setXPos(x)
         self.setYPos(y)
-        self.translatePosition(0,0)
+
         #self.setInPriorityQueue(1,0)
     def setInventory(self, resourceType, quantity):
         self.inventory[resourceType] += quantity
@@ -119,6 +120,7 @@ class unit:
         # TODO: Create getTile(x, y) in gMap.
         return self.getTileOfPos(self.getXPos(), self.getYPos())  # .tileType (between 0 and 4)
     def getTileOfPos(self,x,y):
+        import Config
         return Config.gameMap.getTile(x, y)
     def setXPos(self, val):
         self.xPos = val
@@ -161,7 +163,7 @@ class unit:
         currentTile = self.getCurrentTile()
         resourceData = currentTile.collectResource(1)
         self.inventory[resourceData[0]] = self.inventory[resourceData[0]] + resourceData[1] #Add that to unit's inventory.
-        print("Farming resource. Quantity ", resourceData[1], " of type ", resourceData[0])
+        #print("Farming resource. Quantity ", resourceData[1], " of type ", resourceData[0])
 
     def findPosOfClosestTileOfType(self, destinationTileTypeArray): #Returns closest potential target tile instance given the array of tile types it could be.
         #Is the unit already on a potential target tile?
@@ -170,7 +172,7 @@ class unit:
 
         # Search for the nearest tile of tileType
         tileFound = False
-        maxDistance = 5 #The farthest distance the unit will bother scanning for tiles
+        maxDistance = 0 #The farthest distance the unit will bother scanning for tiles
         distance = 1 #The shortest distance the unit will bother scanning. This should probably start at 1.
         while tileFound == False: #check all spaces [distance] tiles away from the unit
             x = distance
@@ -184,7 +186,8 @@ class unit:
                 for i in range(0, 3):
                     targetXPos = targetXPosArray[i]
                     targetYPos = targetYPosArray[i]
-                    if self.isTileOfType(Config.gameMap.getTile(targetXPos, targetYPos), destinationTileTypeArray) == True:
+                    tile = Config.gameMap.getTile(targetXPos,targetYPos)
+                    if tile and self.isTileOfType(tile, destinationTileTypeArray) == True:
                         return [targetXPos, targetYPos]
                     #No tile found [distance] tiles away that's a target tile.
                 x -= 1
@@ -193,7 +196,6 @@ class unit:
                     break
             distance += 1 #Increase distance and check all tiles that distance away.
             if distance > maxDistance: #Don't bother checking tiles more than the specified max distance away..
-                #print("No tile found")
                 break
 
     def isTileOfType(self, tile, destinationTileTypeArray):
@@ -205,13 +207,15 @@ class unit:
 
     def perform(self):  # This is fired every tick. What action the unit performs is dependent on its behavior, as well as external factors.
         self.reduceHungerPoints()
-        #print('Top priority: ', self.getPriorityQueue()[0])
+
         priorityIndex = 0
+        #print('Top priority: ', priorityIndex)
         while self.getTargetXPos() == None:
             currentStrategy = self.getCurrentStrategy(priorityIndex)
             if currentStrategy.focusTileTypes:
                 #Find target tile type of closet position
                 targetPos = self.findPosOfClosestTileOfType(currentStrategy.focusTileTypes) #returns closest potential target tile
+                #print(targetPos[0])
                 if targetPos:
                     self.setTargetPos(targetPos[0], targetPos[1])
                 else: #Tile not found! Try next strategy.
