@@ -8,13 +8,8 @@ class tile(object):  # class for tiles, mostly a placeholder/template for tile g
     traversable = 1
     stationedUnitID = -1 # -1 means no unit is occupying this tile
 
-    def __init__(self, tileType, numWater, numStone, numWood, numFood, traversable):  # initialized with it's tile type, grassland by default
-        self.tileType = tileType
-        self.numWater = 50
-        self.numStone = numStone
-        self.numWood = numWood
-        self.numFood = numFood
-        self.traversable = traversable
+    def __init__(self, tileType):  # initialized with it's tile type, grassland by default
+        self.setType(tileType)
 
     def setType(self, tileType):  # setter for type
         self.tileType = tileType
