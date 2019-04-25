@@ -60,8 +60,8 @@ def drawBuildings():
         for mapX in range(mapTempX-1,mapLengthX+mapTempX+1):
             for mapY in range(mapTempY-1,mapLengthY+mapTempY+1):
                 Config.screen.blit(Config.baseImg,(Config.tileSize*((Main.buildings.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize))+Config.subTileX,Config.tileSize*(((Main.buildings.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize)))+Config.subTileY,Config.tileSize,Config.tileSize))
-                if Config.selectedUnitID==temp:
-                    pygame.draw.rect(Config.screen,(200,200,200),(Config.tileSize*((Main.buildings.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize))+Config.subTileX,Config.tileSize*(((Main.buildings.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize)))+Config.subTileY,Config.tileSize,Config.tileSize),Config.tileSize//8)
+                #if Config.selectedUnitID==temp:
+                    #pygame.draw.rect(Config.screen,(200,200,200),(Config.tileSize*((Main.buildings.data[temp].xPos%Config.gameMap.xSize+Config.offsetX)+(mapX*Config.gameMap.xSize))+Config.subTileX,Config.tileSize*(((Main.buildings.data[temp].yPos%Config.gameMap.ySize+Config.offsetY)+(mapY*Config.gameMap.ySize)))+Config.subTileY,Config.tileSize,Config.tileSize),Config.tileSize//8)
 
 
 def drawText(X,Y,Text,size):

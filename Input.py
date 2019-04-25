@@ -65,10 +65,7 @@ def scaleSprites():
 
 def testSelect():
     Config.selectedUnitID = Config.gameMap.getTile(Config.dotX, Config.dotY).getStationedUnitID()
-
-
-def testSelect():
-    print(Config.gameMap.getTile(Config.dotX, Config.dotY).getStationedUnitID())
+    #print(Config.gameMap.getTile(Config.dotX, Config.dotY).getStationedUnitID())
 
 
 def inputEditor():
@@ -79,8 +76,16 @@ def inputEditor():
     if pygame.event.peek(QUIT) or keypress[K_ESCAPE]:
         Config.stop = 1
 
-    # Removing this as it interferes
-    
+    if keypress[K_t]:
+        Main.actors.data[0].translatePosition(0,1)
+    if keypress[K_5]:
+        Main.actors.data[0].translatePosition(0,-1)
+    if keypress[K_r]:
+        Main.actors.data[0].translatePosition(-1,0)
+    if keypress[K_y]:
+        Main.actors.data[Config.selectedUnitID].translatePosition(1,0)
+
+    # Movement across map
     Config.subTileX-=(keypress[K_RIGHT]-keypress[K_LEFT])*(32//Config.tileSize+5)*3#arrow keys are used to pan around the world
     Config.subTileY-=(keypress[K_DOWN]-keypress[K_UP])*(32//Config.tileSize+5)*3#^^
     

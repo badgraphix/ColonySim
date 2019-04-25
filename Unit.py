@@ -20,7 +20,7 @@ class Actor:
         self.totalActors=num
         for temp in range(0,num):
             #TODO: Make sure they don't spawn on non-traversable terrain.
-            unitTemp=unit(random.randint(0,x),random.randint(0,y), temp)
+            unitTemp=unit(random.randint(0,x-1),random.randint(0,y-1), temp)
             self.data.append(unitTemp)
     def allAct(self):
         for temp in range(0,self.totalActors):
@@ -71,6 +71,8 @@ class unit:
         self.setXPos(x)
         self.setYPos(y)
         self.translatePosition(0,0)
+        currentTile = Config.gameMap.getTile(self.getXPos(), self.getYPos())
+        currentTile.setStationedUnitID(unitID)
         #self.setInPriorityQueue(1,0)
     def setInventory(self, resourceType, quantity):
         self.inventory[resourceType] += quantity
@@ -121,10 +123,10 @@ class unit:
     def getTileOfPos(self,x,y):
         return Config.gameMap.getTile(x, y)
     def setXPos(self, val):
-        self.xPos = val
+        self.xPos = val%Config.gameMap.xSize
 
     def setYPos(self, val):
-        self.yPos = val
+        self.yPos = val%Config.gameMap.ySize
 
     def setTargetXPos(self, val):
         self.targetXPos = val % Config.gameMap.xSize
@@ -142,8 +144,8 @@ class unit:
     def translatePosition(self, x, y):
         currentTile = Config.gameMap.getTile(self.getXPos(), self.getYPos())
         currentTile.setStationedUnitID(-1)
-        self.xPos += x
-        self.yPos += y
+        self.setXPos(self.xPos+x)
+        self.setYPos(self.yPos+y)
         newTile = Config.gameMap.getTile(self.getXPos(), self.getYPos())
         newTile.setStationedUnitID(self.unitID)
 
