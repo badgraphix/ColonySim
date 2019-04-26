@@ -14,17 +14,20 @@ import Config
 
 class Buildings:
     data=[]
-    totalBuildingss=0
+    totalBuildings=0
+    homeBase = None #a quick reference to home base
     def __init__(self, num,x,y):
-        self.totalBuildings=num
-        for temp in range(0,num):
-            buildingTemp=building(random.randint(0,x),random.randint(0,y),temp,1)
+        self.totalBuildings=num #Create home base
+        for buildingID in range(0,num):
+            buildingTemp=building(0,0,buildingID,1)
             self.data.append(buildingTemp)
+            self.homeBase = buildingTemp #TODO: change this hack
 
     def allAct(self):
         for temp in range(0,self.totalBuildings):
             self.data[temp].perform()
-
+    def getHomeBase(self):
+        return self.homeBase
 
 class building:
     # Coordinates
@@ -42,6 +45,8 @@ class building:
         self.setXPos(x)
         self.setbuildingType = buildtype
         self.setYPos(y)
+        Config.gameMap.getTile(x, y).setStationedBuildingID(self.buildingID) #That tile you're placing this building on? Yeah, make sure that tile has a reference to this building in it.
+
     def setInventory(self, resourceType, quantity):
         if (validateinventorytype(resourceType) == True) :
             self.inventory[resourceType] += quantity
@@ -72,7 +77,6 @@ class building:
 
     def assignbuildingtype(buildtype, self):
         buildingType = buildtype
-
 
 # 1 = home base, 2 = farm, 3 = water tower, 4 = stonestorage, 5 = woodstorage
 # figure out what the keys are (wheat = what? etc)
