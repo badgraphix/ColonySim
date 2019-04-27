@@ -76,19 +76,21 @@ def inputEditor():
     if pygame.event.peek(QUIT) or keypress[K_ESCAPE]:
         Config.stop = 1
 
+
     if keypress[K_t]:
         Main.actors.data[0].translatePosition(0,1)
-    if keypress[K_5]:
+    if keypress[K_6]:
         Main.actors.data[0].translatePosition(0,-1)
     if keypress[K_r]:
         Main.actors.data[0].translatePosition(-1,0)
     if keypress[K_y]:
-        Main.actors.data[Config.selectedUnitID].translatePosition(1,0)
+        Main.actors.data[0].translatePosition(1,0)
 
     # Movement across map
+
     Config.subTileX-=(keypress[K_RIGHT]-keypress[K_LEFT])*(32//Config.tileSize+5)*3#arrow keys are used to pan around the world
     Config.subTileY-=(keypress[K_DOWN]-keypress[K_UP])*(32//Config.tileSize+5)*3#^^
-    
+
     Config.offsetX += Config.subTileX // Config.tileSize
     Config.offsetY += Config.subTileY // Config.tileSize
     Config.subTileX = Config.subTileX % Config.tileSize
@@ -107,7 +109,7 @@ def inputEditor():
     if keypress[K_DOWN]:
         Config.bottomMenu.changeSelectedUnit(10, Main.actors)
     '''
-    
+
     # New controls for changing tile types. The new choices are E, R, T, and Y. This is so the bottom menu controls correspond to
     # their labels
     if keypress[K_1]:
@@ -270,10 +272,10 @@ def inputGame():
         Config.stop = 1
 
     # Removing this as it interferes
-    '''
+
     Config.subTileX-=(keypress[K_RIGHT]-keypress[K_LEFT])*(32//Config.tileSize+5)*3#arrow keys are used to pan around the world
     Config.subTileY-=(keypress[K_DOWN]-keypress[K_UP])*(32//Config.tileSize+5)*3#^^
-    '''
+
     Config.offsetX += Config.subTileX // Config.tileSize
     Config.offsetY += Config.subTileY // Config.tileSize
     Config.subTileX = Config.subTileX % Config.tileSize
@@ -283,15 +285,56 @@ def inputGame():
     Config.dotY = (Config.dotY - (keypress[K_w] - keypress[K_s]))\
                   % Config.gameMap.ySize  # ^^
 
-    if keypress[K_RIGHT]:
+    if keypress[K_Semicolon]:
         Config.bottomMenu.changeSelectedUnit(1, Main.actors)
-    if keypress[K_LEFT]:
+    if keypress[K_J]:
         Config.bottomMenu.changeSelectedUnit(-1, Main.actors)
-    if keypress[K_UP]:
+    if keypress[K_O]:
         Config.bottomMenu.changeSelectedUnit(-10, Main.actors)
-    if keypress[K_DOWN]:
+    if keypress[K_L]:
         Config.bottomMenu.changeSelectedUnit(10, Main.actors)
 
+    # Here are the controls for the bottom menu, which is located in Config.py
+    if keypress[K_1]:
+        Config.bottomMenu.changeMode(1)
+    if keypress[K_2]:
+        Config.bottomMenu.changeMode(2)
+    if keypress[K_3]:
+        Config.bottomMenu.changeMode(3)
+
+    # Select a unit.
+    if keypress[K_RETURN]:
+        testSelect()
+
+    # here the plus and minus(without shift so - and =) are used to zoom in and out by powers of 2, the zoom is centered on the middle of the screen, and the cursor stays put relative to the map not the window(on purpose)
+    if keypress[K_EQUALS] and Config.tileSize <= 80:
+        Config.tileSize = Config.tileSize * 2
+        Config.xlength = Config.xlength // 2
+        Config.ylength = Config.ylength // 2
+        Config.offsetX -= Config.xlength // 2
+        Config.offsetY -= Config.ylength // 2
+        scaleSprites()
+    if keypress[K_MINUS] and Config.tileSize >= 5:
+        Config.tileSize = Config.tileSize // 2
+        Config.xlength = Config.xlength * 2
+        Config.ylength = Config.ylength * 2
+        Config.offsetX += Config.xlength // 4
+        Config.offsetY += Config.ylength // 4
+        scaleSprites()
+
+    # '9' is used to save the game to a text file, '0' is used to load the save, to save long term, make sure to make a copy of this file elsewhere.
+    if keypress[K_9]:
+        with open("Saves/Save.txt", "wb") as fp:
+            pickle.dump(Config.gameMap, fp)
+    if keypress[K_0]:
+        with open("Saves/Save.txt", "rb") as fp:
+            Config.gameMap = pickle.load(fp)
+
+    # Space is used to pause the game
+    if keypress[K_SPACE]:
+        Config.pause = (Config.pause + 1) % 2
+
+'''
     # New controls for changing tile types. The new choices are E, R, T, and Y. This is so the bottom menu controls correspond to
     # their labels
     if keypress[K_e]:
@@ -392,16 +435,12 @@ def inputGame():
                                                                                         2)) - 0.2 <= Config.brushSize) or Config.dotY + tempY >= 0 and Config.dotY + tempY < Config.gameMap.ySize and Config.dotX + tempX >= 0 and Config.dotX + tempX < Config.gameMap.xSize and math.sqrt(
                         math.pow(tempX, 2) + math.pow(tempY, 2)) - 0.2 <= Config.brushSize:
                         Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+
                                                 (Config.dotY + tempY) % Config.gameMap.ySize, 4)
+'''
 
-    # Here are the controls for the bottom menu, which is located in Config.py
-    if keypress[K_1]:
-        Config.bottomMenu.changeMode(1)
-    if keypress[K_2]:
-        Config.bottomMenu.changeMode(2)
-    if keypress[K_3]:
-        Config.bottomMenu.changeMode(3)
 
+'''
     # adjusts the brush size
     if keypress[K_p]:
         Config.brushSize += 1
@@ -411,35 +450,4 @@ def inputGame():
     # change brush shape between square, diamond, and round
     if keypress[K_i]:
         Config.brushType = (Config.brushType + 1) % 3
-
-    # Select a unit.
-    if keypress[K_u]:
-        testSelect()
-
-    # here the plus and minus(without shift so - and =) are used to zoom in and out by powers of 2, the zoom is centered on the middle of the screen, and the cursor stays put relative to the map not the window(on purpose)
-    if keypress[K_EQUALS] and Config.tileSize <= 80:
-        Config.tileSize = Config.tileSize * 2
-        Config.xlength = Config.xlength // 2
-        Config.ylength = Config.ylength // 2
-        Config.offsetX -= Config.xlength // 2
-        Config.offsetY -= Config.ylength // 2
-        scaleSprites()
-    if keypress[K_MINUS] and Config.tileSize >= 5:
-        Config.tileSize = Config.tileSize // 2
-        Config.xlength = Config.xlength * 2
-        Config.ylength = Config.ylength * 2
-        Config.offsetX += Config.xlength // 4
-        Config.offsetY += Config.ylength // 4
-        scaleSprites()
-
-    # '9' is used to save the game to a text file, '0' is used to load the save, to save long term, make sure to make a copy of this file elsewhere.
-    if keypress[K_9]:
-        with open("Saves/Save.txt", "wb") as fp:
-            pickle.dump(Config.gameMap, fp)
-    if keypress[K_0]:
-        with open("Saves/Save.txt", "rb") as fp:
-            Config.gameMap = pickle.load(fp)
-
-    # Space is used to pause the game
-    if keypress[K_SPACE]:
-        Config.pause = (Config.pause + 1) % 2
+'''
