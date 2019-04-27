@@ -76,7 +76,6 @@ def inputEditor():
     if pygame.event.peek(QUIT) or keypress[K_ESCAPE]:
         Config.stop = 1
 
-
     if keypress[K_t]:
         Main.actors.data[0].translatePosition(0,1)
     if keypress[K_6]:
@@ -87,7 +86,6 @@ def inputEditor():
         Main.actors.data[0].translatePosition(1,0)
 
     # Movement across map
-
     Config.subTileX-=(keypress[K_RIGHT]-keypress[K_LEFT])*(32//Config.tileSize+5)*3#arrow keys are used to pan around the world
     Config.subTileY-=(keypress[K_DOWN]-keypress[K_UP])*(32//Config.tileSize+5)*3#^^
 
@@ -97,7 +95,7 @@ def inputEditor():
     Config.subTileY = Config.subTileY % Config.tileSize
     Config.dotX = (Config.dotX - (keypress[K_a] - keypress[K_d])) \
                   % Config.gameMap.xSize  # wasd are used to move the cursor around, the black tile
-    Config.dotY = (Config.dotY - (keypress[K_w] - keypress[K_s]))\
+    Config.dotY = (Config.dotY - (keypress[K_w] - keypress[K_s])) \
                   % Config.gameMap.ySize  # ^^
     '''
     if keypress[K_RIGHT]:

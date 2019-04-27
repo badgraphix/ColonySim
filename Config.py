@@ -11,7 +11,7 @@ import GUI
 
 # GlobalVariables
 gameFont = pygame.font.match_font('arial')
-gameMode = 0
+gameMode = 1
 
 screenXSize = 1280
 screenYSize = 720
@@ -39,7 +39,7 @@ stop = 0  # ends the game when set to 1
 pause = 0  # pauses the actors when set to 1
 gameMap = gMap(150, 150)  # creates the map object, change sizes here to resize a map
 
-actors = 5  # Actor(5,150,150)
+actors = 1  # Actor(5,150,150)
 actorsx = 150
 actorsy = 150
 timeSeconds = 0
@@ -120,6 +120,5 @@ farmsImg = farmsx32
 MAX_UNIT_HUNGER = 100
 
 # Setting up the screen and the bottom menu
-
 
 

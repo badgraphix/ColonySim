@@ -11,12 +11,11 @@ import Unit
 import time
 actors = None
 buildings = None
-
 def main():
     pygame.init()
 
     Main.actors = Unit.Actor(Config.actors, Config.actorsx, Config.actorsy)
-    Main.buildings = Building.Buildings(Config.actors, Config.actorsx, Config.actorsy)
+    Main.buildings = Building.Buildings(1, Config.actorsx, Config.actorsy)
 
     if Config.loadMap == 1:
         with open("Saves/Save.txt", "rb") as fp:
@@ -30,7 +29,8 @@ def main():
         else:
             inputGame()
 
-        if Config.pause == 0:Main.actors.allAct()
+        if Config.pause == 0:
+            Main.actors.allAct()
 
         drawAll()  # call the draw map function
         pygame.display.update()  # update map once updated

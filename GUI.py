@@ -218,7 +218,7 @@ class BottomMenu:
                                                                         self.height + self.TEXT_OFFSET + verticalOffset - 2,
                                                                         self.boxSize + 2, self.boxSize + 2), 2)
 
-                    self.topBar.draw(surface, buildings.data[i].hitPoints / Config.MAX_UNIT_HUNGER)
+                    #self.topBar.draw(surface, buildings.data[i].hitPoints / Config.MAX_UNIT_HUNGER)
                     self.middleBar.draw(surface, buildings.data[i].inventory[0] / Config.MAX_UNIT_HUNGER)
 
                     textX = self.topBar.x + self.width / 6 + self.width / 72
