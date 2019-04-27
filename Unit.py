@@ -157,7 +157,7 @@ class unit:
     def die(self):
         self.hitPoints = 0
     def dwindleAway(self): #A baseline function that reduces all of those survival points
-        self.reduceHungerPoints()
+        #self.reduceHungerPoints() #These are disabled for the time being.
         #self.reduceThirstPoints()
 
     def reduceHungerPoints(self):
