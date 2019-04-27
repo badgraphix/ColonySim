@@ -71,6 +71,7 @@ class unit:
         self.setXPos(x)
         self.setYPos(y)
         self.translatePosition(0, 0)
+
         #self.setInPriorityQueue(1,0)
     def setInventory(self, resourceType, quantity):
         self.inventory[resourceType] += quantity
