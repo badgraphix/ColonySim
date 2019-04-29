@@ -47,6 +47,7 @@ class SoldierStrategy:
 class IdleStrategy:
     focusTileTypes = []
 
+immortalUnits = True #If immortalUnits is true, units won't dwindle away.
 class unit:
     # Coordinates
     xPos = 0
@@ -156,8 +157,9 @@ class unit:
     def die(self):
         self.hitPoints = 0
     def dwindleAway(self): #A baseline function that reduces all of those survival points
-        self.reduceHungerPoints()
-        #self.reduceThirstPoints()
+        if immortalUnits == False:
+            self.reduceHungerPoints()
+            self.reduceThirstPoints()
 
     def reduceHungerPoints(self):
         starveUnit = .5 #How much hunger points are lost in a single step.

@@ -354,7 +354,6 @@ def inputGame():
                         math.pow(tempX, 2) + math.pow(tempY, 2)) - 0.2 <= Config.brushSize:
                         Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
                                                 (Config.dotY + tempY) % Config.gameMap.ySize, 0)
-
     if keypress[K_r]:
         for tempX in range(-Config.brushSize, Config.brushSize + 1):
             for tempY in range(-Config.brushSize, Config.brushSize + 1):
@@ -374,7 +373,6 @@ def inputGame():
                         math.pow(tempX, 2) + math.pow(tempY, 2)) - 0.2 <= Config.brushSize:
                         Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
                                                 (Config.dotY + tempY) % Config.gameMap.ySize, 1)
-
     if keypress[K_t]:
         for tempX in range(-Config.brushSize, Config.brushSize + 1):
             for tempY in range(-Config.brushSize, Config.brushSize + 1):
@@ -394,7 +392,6 @@ def inputGame():
                         math.pow(tempX, 2) + math.pow(tempY, 2)) - 0.2 <= Config.brushSize:
                         Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
                                                 (Config.dotY + tempY) % Config.gameMap.ySize, 2)
-
     if keypress[K_y]:
         for tempX in range(-Config.brushSize, Config.brushSize + 1):
             for tempY in range(-Config.brushSize, Config.brushSize + 1):
@@ -414,7 +411,6 @@ def inputGame():
                         math.pow(tempX, 2) + math.pow(tempY, 2)) - 0.2 <= Config.brushSize:
                         Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
                                                 (Config.dotY + tempY) % Config.gameMap.ySize, 3)
-
     if keypress[K_u]:
         for tempX in range(-Config.brushSize, Config.brushSize + 1):
             for tempY in range(-Config.brushSize, Config.brushSize + 1):
@@ -444,8 +440,7 @@ def inputGame():
         Config.brushSize += 1
     if keypress[K_o] and Config.brushSize != 0:
         Config.brushSize -= 1
-
     # change brush shape between square, diamond, and round
     if keypress[K_i]:
         Config.brushType = (Config.brushType + 1) % 3
-'''
+
