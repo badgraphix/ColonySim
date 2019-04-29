@@ -24,7 +24,7 @@ def main():
     while Config.stop == 0:  # Main loop, ends if Config.stop is changed
 
         # take keyboard input
-        if(Config.gamemode == 0):
+        if(Config.gameMode == 0):
             inputEditor()
         else:
             inputGame()
