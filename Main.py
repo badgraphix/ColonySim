@@ -12,8 +12,6 @@ import time
 
 actors = None
 buildings = None
-
-
 def main():
     pygame.init()
 

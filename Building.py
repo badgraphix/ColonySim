@@ -13,16 +13,15 @@ import Config
 
 
 class Buildings:
-    data = []
-    totalBuildings = 0
-    homeBase = None  # a quick reference to home base
-
-    def __init__(self, num, x, y):
-        self.totalBuildings = num  # Create home base
-        for buildingID in range(0, num):
-            buildingTemp = building(0, 0, buildingID, 1)
+    data=[]
+    totalBuildings=0
+    homeBase = None #a quick reference to home base
+    def __init__(self, num,x,y):
+        self.totalBuildings=num #Create home base
+        for buildingID in range(0,num):
+            buildingTemp=building(0,0,buildingID,1)
             self.data.append(buildingTemp)
-            self.homeBase = buildingTemp  # TODO: change this hack
+            self.homeBase = buildingTemp #TODO: change this hack
 
     def allAct(self):
         for temp in range(0, self.totalBuildings):
@@ -31,13 +30,12 @@ class Buildings:
     def getHomeBase(self):
         return self.data[0]
 
-
 class building:
     # Coordinates
     xPos = 0
     yPos = 0
     buildingType = 0
-    # building type. Represented as an integer that is used #
+    # building type. Represented as an integer that is used
     # as the parameter for a getbuildingData() function.
     # 1 = home base, 2 = farm, 3 = water tower, 4 = stonestorage, 5 = woodstrage
     # Inventory. Each entry in the array represents the quantity of that respective resource type. A building can only hold ONE type of resource at a time, so keep this in mind while developing.
@@ -46,6 +44,7 @@ class building:
     def __init__(self, x, y, buildingID, buildtype):
         self.buildingID = buildingID
         self.setXPos(x)
+        self.setbuildingType = buildtype
         self.setYPos(y)
         self.assignbuildingtype(buildtype)
         Config.gameMap.getTile(x, y).setStationedBuildingID(self.buildingID)  # That tile you're placing this building on? Yeah, make sure that tile has a reference to this building in it.
@@ -54,6 +53,9 @@ class building:
         if self.validateinventorytype(resourceType):
             self.inventory[resourceType] += quantity
 
+    def setInventory(self, resourceType, quantity):
+        if (validateinventorytype(resourceType) == True) :
+            self.inventory[resourceType] += quantity
     def getInventory(self):
         return self.inventory
 
@@ -88,6 +90,4 @@ class building:
         if self.buildingType == 1:
             return True
         elif self.buildingType == resourceType:
-            return True
-        else:
             return False

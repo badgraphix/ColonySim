@@ -342,3 +342,115 @@ def inputGame():
     if keypress[K_m]:
         Config.bottomMenu.buildBuilding(2)
 
+'''
+    # New controls for changing tile types. The new choices are E, R, T, and Y. This is so the bottom menu controls correspond to
+    # their labels
+    if keypress[K_e]:
+        for tempX in range(-Config.brushSize, Config.brushSize + 1):
+            for tempY in range(-Config.brushSize, Config.brushSize + 1):
+                if Config.brushType == 0:
+                    if Config.loopMap == 1 or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 0)
+                elif Config.brushType == 1:
+                    if (Config.loopMap == 1 and abs(tempX) + abs(
+                            tempY) <= Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and abs(
+                        tempX) + abs(tempY) <= Config.brushSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 0)
+                elif Config.brushType == 2:
+                    if (Config.loopMap == 1 and math.sqrt(math.pow(tempX, 2) + math.pow(tempY,
+                                                                                        2)) - 0.2 <= Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and math.sqrt(
+                        math.pow(tempX, 2) + math.pow(tempY, 2)) - 0.2 <= Config.brushSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 0)
+    if keypress[K_r]:
+        for tempX in range(-Config.brushSize, Config.brushSize + 1):
+            for tempY in range(-Config.brushSize, Config.brushSize + 1):
+                if Config.brushType == 0:
+                    if Config.loopMap == 1 or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 1)
+                elif Config.brushType == 1:
+                    if (Config.loopMap == 1 and abs(tempX) + abs(
+                            tempY) <= Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and abs(
+                        tempX) + abs(tempY) <= Config.brushSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 1)
+                elif Config.brushType == 2:
+                    if (Config.loopMap == 1 and math.sqrt(math.pow(tempX, 2) + math.pow(tempY,
+                                                                                        2)) - 0.2 <= Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and math.sqrt(
+                        math.pow(tempX, 2) + math.pow(tempY, 2)) - 0.2 <= Config.brushSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 1)
+    if keypress[K_t]:
+        for tempX in range(-Config.brushSize, Config.brushSize + 1):
+            for tempY in range(-Config.brushSize, Config.brushSize + 1):
+                if Config.brushType == 0:
+                    if Config.loopMap == 1 or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 2)
+                elif Config.brushType == 1:
+                    if (Config.loopMap == 1 and abs(tempX) + abs(
+                            tempY) <= Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and abs(
+                        tempX) + abs(tempY) <= Config.brushSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 2)
+                elif Config.brushType == 2:
+                    if (Config.loopMap == 1 and math.sqrt(math.pow(tempX, 2) + math.pow(tempY,
+                                                                                        2)) - 0.2 <= Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and math.sqrt(
+                        math.pow(tempX, 2) + math.pow(tempY, 2)) - 0.2 <= Config.brushSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 2)
+    if keypress[K_y]:
+        for tempX in range(-Config.brushSize, Config.brushSize + 1):
+            for tempY in range(-Config.brushSize, Config.brushSize + 1):
+                if Config.brushType == 0:
+                    if Config.loopMap == 1 or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 3)
+                elif Config.brushType == 1:
+                    if (Config.loopMap == 1 and abs(tempX) + abs(
+                            tempY) <= Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and abs(
+                        tempX) + abs(tempY) <= Config.brushSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 3)
+                elif Config.brushType == 2:
+                    if (Config.loopMap == 1 and math.sqrt(math.pow(tempX, 2) + math.pow(tempY,
+                                                                                        2)) - 0.2 <= Config.brushSize) or 0 <= Config.dotY + tempY < Config.gameMap.ySize and 0 <= Config.dotX + tempX < Config.gameMap.xSize and math.sqrt(
+                        math.pow(tempX, 2) + math.pow(tempY, 2)) - 0.2 <= Config.brushSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 3)
+    if keypress[K_u]:
+        for tempX in range(-Config.brushSize, Config.brushSize + 1):
+            for tempY in range(-Config.brushSize, Config.brushSize + 1):
+                if Config.brushType == 0:
+                    if Config.loopMap == 1 or Config.dotY + tempY >= 0 and Config.dotY + tempY < Config.gameMap.ySize and Config.dotX + tempX >= 0 and Config.dotX + tempX < Config.gameMap.xSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 4)
+                elif Config.brushType == 1:
+                    if (Config.loopMap == 1 and abs(tempX) + abs(
+                            tempY) <= Config.brushSize) or Config.dotY + tempY >= 0 and Config.dotY + tempY < Config.gameMap.ySize and Config.dotX + tempX >= 0 and Config.dotX + tempX < Config.gameMap.xSize and abs(
+                        tempX) + abs(tempY) <= Config.brushSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 4)
+                elif Config.brushType == 2:
+                    if (Config.loopMap == 1 and math.sqrt(math.pow(tempX, 2) + math.pow(tempY,
+                                                                                        2)) - 0.2 <= Config.brushSize) or Config.dotY + tempY >= 0 and Config.dotY + tempY < Config.gameMap.ySize and Config.dotX + tempX >= 0 and Config.dotX + tempX < Config.gameMap.xSize and math.sqrt(
+                        math.pow(tempX, 2) + math.pow(tempY, 2)) - 0.2 <= Config.brushSize:
+                        Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
+                                                (Config.dotY + tempY) % Config.gameMap.ySize, 4)
+'''
+
+
+'''
+    # adjusts the brush size
+    if keypress[K_p]:
+        Config.brushSize += 1
+    if keypress[K_o] and Config.brushSize != 0:
+        Config.brushSize -= 1
+    # change brush shape between square, diamond, and round
+    if keypress[K_i]:
+        Config.brushType = (Config.brushType + 1) % 3
+'''
+>>>>>>> c32d6afe0e2b922c59f2cab78d64dd99354bef45

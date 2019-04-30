@@ -56,6 +56,7 @@ def drawBuildings():
     mapLengthX=((Config.xlength)//Config.gameMap.xSize)+1
     mapTempY=-Config.offsetY//Config.gameMap.ySize
     mapLengthY=((Config.ylength)//Config.gameMap.ySize)+1
+
     for temp in range(0, len(Main.buildings.data)):
         for mapX in range(mapTempX-1,mapLengthX+mapTempX+1):
             for mapY in range(mapTempY-1,mapLengthY+mapTempY+1):
