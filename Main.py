@@ -24,8 +24,11 @@ def main():
     while Config.stop == 0:  # Main loop, ends if Config.stop is changed
 
         # take keyboard input
-        inputEditor()
-
+        if(Config.gameMode == 0):
+            inputEditor()
+        else:
+            inputGame()
+        
         if Config.pause == 0:
             Main.actors.allAct()
 

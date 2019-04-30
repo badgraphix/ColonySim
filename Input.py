@@ -283,13 +283,13 @@ def inputGame():
     Config.dotY = (Config.dotY - (keypress[K_w] - keypress[K_s]))\
                   % Config.gameMap.ySize  # ^^
 
-    if keypress[K_Semicolon]:
+    if keypress[K_SEMICOLON]:
         Config.bottomMenu.changeSelectedUnit(1, Main.actors)
-    if keypress[K_J]:
+    if keypress[K_j]:
         Config.bottomMenu.changeSelectedUnit(-1, Main.actors)
-    if keypress[K_O]:
+    if keypress[K_o]:
         Config.bottomMenu.changeSelectedUnit(-10, Main.actors)
-    if keypress[K_L]:
+    if keypress[K_l]:
         Config.bottomMenu.changeSelectedUnit(10, Main.actors)
 
     # Here are the controls for the bottom menu, which is located in Config.py
