@@ -5,7 +5,7 @@ class tile(object):  # class for tiles, mostly a placeholder/template for tile g
     numStone= 0
     numWood = 0
     numFood = 0
-    traversable = 1
+    traversable = 1 #Traversable is 1, non-traversable is 0
     stationedUnitID = -1 # -1 means no unit is occupying this tile
     building = None
     def __init__(self, tileType):  # initialized with it's tile type, grassland by default
@@ -30,19 +30,19 @@ class tile(object):  # class for tiles, mostly a placeholder/template for tile g
             self.numStone = 0
             self.numWood = 0
             self.numFood = 0
-            self.traversable = 1 #0
+            self.traversable = 1#0
         if self.tileType == 3:  # 3 for Mountain
             self.numWater = 0
             self.numStone = 50
             self.numWood = 0
             self.numFood = 0
-            self.traversable = 1 #0
+            self.traversable = 1#0
         if self.tileType == 4:  # 4 for Farmland
             self.numWater = 0
             self.numStone = 0
             self.numWood = 0
             self.numFood = 50
-            self.traversable = 1 #0
+            self.traversable = 1#0
 
     def getType(self):
         return self.tileType

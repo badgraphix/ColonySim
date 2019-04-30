@@ -10,6 +10,7 @@ import sys, random, os.path
 import math
 from Tile import *
 import Main
+import Config
 
 class Actor:
     data=[]
@@ -47,7 +48,7 @@ class SoldierStrategy:
 class IdleStrategy:
     focusTileTypes = []
 
-immortalUnits = True #If immortalUnits is true, units won't dwindle away.
+immortalUnits = False #If immortalUnits is true, units won't dwindle away.
 class unit:
     # Coordinates
     xPos = 0
@@ -66,7 +67,7 @@ class unit:
     behavior = 0  # Each behavior type is currently stored as an int. 0 is standby mode, where the unit will not perform any actions.
     targetTile = None  # Specifies where the unit is heading towards. Does not always contain a value.
     priorityQueue = [WaterCollectorStrategy, FarmerStrategy, WoodcutterStrategy, StoneCollectorStrategy, SoldierStrategy, IdleStrategy]
-
+    pathfindArray = []
     def __init__(self, x, y, unitID):
         self.unitID = unitID
         self.setXPos(x)
@@ -121,7 +122,6 @@ class unit:
         # TODO: Create getTile(x, y) in gMap.
         return self.getTileOfPos(self.getXPos(), self.getYPos())  # .tileType (between 0 and 4)
     def getTileOfPos(self,x,y):
-        import Config
         return Config.gameMap.getTile(x, y)
     def setXPos(self, val):
         self.xPos = val
@@ -142,8 +142,20 @@ class unit:
             self.targetYPos = val % Config.gameMap.ySize
 
     def setTargetPos(self, x, y):
+        #print('setting t pos')
         self.setTargetXPos(x);
         self.setTargetYPos(y);
+        if x and y:
+            focusTileType = self.getTileOfPos(x,y).getType()
+            # Find target tile type of closet position
+            #print(focusTileType)
+            #self.pathfindArray = self.pathfind(focusTileType)
+            #print(len(self.pathfindArray), ' is the length!')
+    def restoreHungerPoints(self):
+        self.hungerPoints = 100
+
+    def restoreThirstPoints(self):
+        self.hungerPoints = 100
 
     def isUnitAtTargetPos(self):
         return self.getXPos() == self.getTargetXPos() and self.getYPos() == self.getTargetYPos();
@@ -163,7 +175,7 @@ class unit:
             self.reduceThirstPoints()
 
     def reduceHungerPoints(self):
-        starveUnit = .5 #How much hunger points are lost in a single step.
+        starveUnit = .1 #How much hunger points are lost in a single step.
         if self.hungerPoints - starveUnit < 0: #starve
             self.hungerPoints = 0
             self.die()
@@ -175,7 +187,7 @@ class unit:
                 self.hitPoints = 100;
 
     def reduceThirstPoints(self):
-        dehydrateUnit = .5 #How much thirst points are lost in a single step
+        dehydrateUnit = .1 #How much thirst points are lost in a single step
         if self.thirstPoints - dehydrateUnit < 0:  # starve
             self.thirstPoints = 0
             self.die()
@@ -237,45 +249,48 @@ class unit:
             if tileType == destinationTileType:
                 return True
 
-    def pathfind(tileType):
+    def pathfind(self, tileType):
         path = []
+        found = [0]
 
-        #calculate the distance from the current tile to the target
-        def calcH(x, y):
-            return sqrt((abs(self.getTargetXPos() - x)**2) + (abs(self.getTargetYPos() - y)**2))
+        # calculate the distance from the current tile to the target
+        def calcH(x, y, targX, targY):
+            return ((abs(targX - x) ** 2) + (abs(targY - y) ** 2))
 
         #x and y are (x,y) g is distance from start pos(can be used to limit runtime), patharris a list of directions generated with recursive backtracking
-        def recSearch(x, y, g, patharr, found, lastdir):
-            
+        def recSearch(x, y, targx, targy, g, patharr, found, lastdir):
+            # translate the last move so we dont get stuck in an up down loop
+            dontcheck = 5
+            if (lastdir == 0):
+                dontcheck = 1
+            if (lastdir == 1):
+                dontcheck = 0
+            if (lastdir == 2):
+                dontcheck = 3
+            if (lastdir == 3):
+                dontcheck = 2
+
             #base cases to terminate recursion
-            if(getCurrentTile()):
+            #print(self.getTileOfPos())
+            if(self.getTileOfPos(x,y)).traversable == 0: #Tile is not traversable
+                #print("POP")
                 patharr.pop(-1)
                 return # case for if current tile its checking is impassable //get clarification\\
-
-            if(g >= 50):
+            if(g >= 10):
                 return #limiting run time
 
-            if(x == self.getTargetXPos() and y == self.getTargetXPos()): # if we found a way to the target pos
-                found = 1
+            if(x == targx and y == targy): # if we found a way to the target pos
+                found[0] = 1
                 return patharr
-
-            #translate the last move so we dont get stuck in an up down loop
-            dontcheck = 5
-            if(lastdir == 0):
-                dontcheck = 1
-            if(lastdir == 1):
-                dontcheck = 0
-            if(lastdir == 2):
-                dontcheck = 3
-            if(lastdir == 3):
-                dontcheck = 2
 
             #calc f score for the 4 surrounding tiles put to a list
             fscores = []
-            fscores += (g + 1) + calcH(xPos + 1, yPos)    #[0] right
-            fscores += (g + 1) + calcH(xPos - 1, yPos)    #[1] left
-            fscores += (g + 1) + calcH(xPos, yPos - 1)    #[2] up
-            fscores += (g + 1) + calcH(xPos, yPos + 1)    #[3] down
+            # calc f score for the 4 surrounding tiles put to a list
+            fscores = []
+            fscores.append((g + 1) + calcH(x + 1, y, targx, targy))  # [0] right
+            fscores.append((g + 1) + calcH(x - 1, y, targx, targy))  # [1] left
+            fscores.append((g + 1) + calcH(x, y - 1, targx, targy))  # [2] up
+            fscores.append((g + 1) + calcH(x, y + 1, targx, targy))  # [3] down
 
             checked = [0,0,0,0]
 
@@ -289,46 +304,49 @@ class unit:
                         if(not checked[k] and k != dontcheck):
                             minval = fscores[k]
                             minind = k
-                            
+
                 for i in range(0,4):
                     temp = float(fscores[i])
                     if(temp < minval and not checked[i] and i != dontcheck):
                         minval = fscores[i]
                         minind = i
-                        
+
                 checked[minind] = 1
 
                 #right
                 if(minind == 0 and not found[0]):
                     patharr.append(minind)
-                    recSearch(x + 1, y, g + 1, patharr, found, minind)
+                    recSearch(x + 1, y, targx, targy, g + 1, patharr, found, minind)
                     if(found[0]):
                         return patharr
 
-                #left    
+                #left
                 if(minind == 1 and not found[0]):
                     patharr.append(minind)
-                    recSearch(x - 1, y, g + 1, patharr, found, minind)
+                    recSearch(x - 1, y, targx, targy, g + 1, patharr, found, minind)
                     if(found[0]):
                         return patharr
-                    
+
                 #up
                 if(minind == 2 and not found[0]):
                     patharr.append(minind)
-                    recSearch(x, y - 1, g + 1, patharr, found, minind)
+                    recSearch(x, y - 1, targx, targy, g + 1, patharr, found, minind)
                     if(found[0]):
                         return patharr
 
                 #down
                 if(minind == 3 and not found[0]):
                     patharr.append(minind)
-                    recSearch(x, y + 1, g + 1, patharr, found, minind)
+                    recSearch(x, y + 1, targx, targy, g + 1, patharr, found, minind)
                     if(found[0]):
                         return patharr
 
+        path = recSearch(self.getXPos(), self.getYPos(), self.getTargetXPos(), self.getTargetYPos(), 0, path, found, 5)
+        return path
 
-            #get the target x and y values for each unit
-            findClosestTileOfType(self, tileType)
+
+
+
 
     def perform(self):  # This is fired every tick. What action the unit performs is dependent on its behavior, as well as external factors.
         if self.hitPoints > 0: #Unit must be alive to perform any actions.
@@ -337,7 +355,6 @@ class unit:
             while self.getTargetXPos() == None:
                 currentStrategy = self.getCurrentStrategy(priorityIndex)
                 if currentStrategy.focusTileTypes:
-                    #Find target tile type of closet position
                     targetPos = self.findPosOfClosestTileOfType(currentStrategy.focusTileTypes) #returns closest potential target tile
                     #print(targetPos[0])
                     if targetPos:
@@ -359,6 +376,9 @@ class unit:
                     for i in range(0,len(self.inventory)-1):
                         building.inventory[i] = building.inventory[i] + self.inventory[i]
                         self.inventory[i] = 0
+                        #Replenish unit health
+                        self.restoreHungerPoints()
+                        self.restoreThirstPoints()
                     #print("Inventory deposited.")
                     self.setTargetPos(None, None)
                 else: #Normal behavior
@@ -367,6 +387,8 @@ class unit:
 
             #TODO: If one unit is heading toward a tile, should other units try heading somewhere else?
             #Pathfind to (self.targetXPos, self.targetYPos)
+
+
             if self.getTargetXPos() != None:
                 #print('At ', self.getXPos(), ' going to ', self.getTargetXPos())
                 if self.getTargetXPos() < self.getXPos():
@@ -378,6 +400,18 @@ class unit:
                     self.translatePosition(0, -1)
                 elif self.getTargetYPos() > self.getYPos():
                     self.translatePosition(0, 1)
-                self.dwindleAway()  # starve a little for moving during a step
+
+            #To swap to the intensive pathfinding, comment out the above if statements and run this instead.
+            '''if self.pathfindArray and len(self.pathfindArray) > 0:
+                if self.pathfindArray[0] == 0:
+                    self.translatePosition(1, 0)  # move right
+                elif self.pathfindArray[0] == 1:
+                    self.translatePosition(-1, 0)  # move left
+                elif self.pathfindArray[0] == 2:
+                    self.translatePosition(0, 1)  # move up
+                elif self.pathfindArray[0] == 3:
+                    self.translatePosition(0, -1)  # move down
+                self.pathfindArray.pop(0)'''
+            self.dwindleAway()  # starve a little for moving during a step
 
 import Config
