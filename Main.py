@@ -19,6 +19,7 @@ def main():
 
     Main.actors = Unit.Actor(Config.actors, Config.actorsx, Config.actorsy)
     Main.buildings = Building.Buildings(1, Config.actorsx, Config.actorsy)
+    Main.buildings.data[0].inventory[4] = 500
 
     if Config.loadMap == 1:
         with open("Saves/Save.txt", "rb") as fp:

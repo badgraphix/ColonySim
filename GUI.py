@@ -228,12 +228,12 @@ class BottomMenu:
                                                                         self.boxSize + 2, self.boxSize + 2), 2)
 
                     #self.topBar.draw(surface, buildings.data[i].hitPoints / Config.MAX_UNIT_HUNGER)
-                    self.middleBar.draw(surface, buildings.data[i].inventory[0] / Config.MAX_UNIT_HUNGER)
+                    #self.middleBar.draw(surface, buildings.data[i].inventory[0] / Config.MAX_UNIT_HUNGER)
 
-                    textX = self.topBar.x + self.width / 6 + self.width / 72
+                    #textX = self.topBar.x + self.width / 6 + self.width / 72
                     #surface.blit(self.healthText, (textX, self.topBar.y - self.barHeight / 4))
-                    surface.blit(self.hungerText, (textX, self.topBar.y - self.barHeight / 4 +
-                                                   self.middleBar.y - self.topBar.y))
+                    #surface.blit(self.hungerText, (textX, self.topBar.y - self.barHeight / 4 +
+                                                   #self.middleBar.y - self.topBar.y))
 
                 horizontalOffset += 50
                 if self.width / 3 + horizontalOffset + self.boxSize > 2 * self.width / 3:
