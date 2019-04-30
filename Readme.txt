@@ -35,3 +35,5 @@ Controls:
 		'2' = Select Units Menu
 		'3' = Select Colony View Menu
 		
+		'0' - While in Buildings Menu, shows a shortcut menu describing all of the buildings, their costs, and the controls to 			build them.
+		
