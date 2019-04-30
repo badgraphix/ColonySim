@@ -1,6 +1,8 @@
 import pygame
 
+import Main
 import Config
+import Building
 
 
 class Button:
@@ -151,6 +153,11 @@ class BottomMenu:
     barHeight = 0
     menuHeight = 0
 
+    # Build menu
+    buildMenu = None
+
+    showMenu = False
+
     def __init__(self, width, height, coverage=.2):
         self.trueHeight = height
         self.height = height * (1 - coverage)
@@ -182,6 +189,8 @@ class BottomMenu:
         self.healthText = self.rightFont.render("Health", True, self.TEXT_COLOR)
         self.hungerText = self.rightFont.render("Hunger", True, self.TEXT_COLOR)
         self.thirstText = self.rightFont.render("Thirst", True, self.TEXT_COLOR)
+
+        self.buildMenu = BuildMenu(self.trueHeight, self.width)
 
     def draw(self, surface, units, buildings):
         # Drawing the rectangles to form the base of the menu
@@ -218,11 +227,11 @@ class BottomMenu:
                                                                         self.height + self.TEXT_OFFSET + verticalOffset - 2,
                                                                         self.boxSize + 2, self.boxSize + 2), 2)
 
-                    self.topBar.draw(surface, buildings.data[i].hitPoints / Config.MAX_UNIT_HUNGER)
+                    #self.topBar.draw(surface, buildings.data[i].hitPoints / Config.MAX_UNIT_HUNGER)
                     self.middleBar.draw(surface, buildings.data[i].inventory[0] / Config.MAX_UNIT_HUNGER)
 
                     textX = self.topBar.x + self.width / 6 + self.width / 72
-                    surface.blit(self.healthText, (textX, self.topBar.y - self.barHeight / 4))
+                    #surface.blit(self.healthText, (textX, self.topBar.y - self.barHeight / 4))
                     surface.blit(self.hungerText, (textX, self.topBar.y - self.barHeight / 4 +
                                                    self.middleBar.y - self.topBar.y))
 
@@ -230,6 +239,9 @@ class BottomMenu:
                 if self.width / 3 + horizontalOffset + self.boxSize > 2 * self.width / 3:
                     verticalOffset += 50
                     horizontalOffset = self.horizontalOffset
+
+            if self.showMenu:
+                self.buildMenu.draw(surface)
 
         # If mode == 2, meaning we want the unit view
         if self.mode == 2:
@@ -303,12 +315,9 @@ class BottomMenu:
 
             spacing = self.calculateVerticalSpacing(2, self.barHeight)
 
-            self.topBar = Bar(self.TEXT_COLOR, pygame.Color(0, 255, 0), "Top Bar",
-                              (2 * self.width / 3) + self.width / 120,
-                              self.height + spacing - spacing / 2, self.width / 6, self.barHeight)
             self.middleBar = Bar(self.TEXT_COLOR, pygame.Color(0, 255, 0), "Top Bar",
                                  (2 * self.width / 3) + self.width / 120,
-                                 self.height + spacing + self.height / 24 + self.height / 48,
+                                 self.height + spacing +  self.height / 48,
                                  self.width / 6, self.barHeight)
 
             self.rightFont = pygame.font.Font(Config.gameFont,
@@ -344,55 +353,106 @@ class BottomMenu:
 
     # Input method to change the selected unit by changing the selected unit variable. Is put into its' own function
     # to account for wrapping, and to handle up and down presses (since it is a 1-D list).
-    def changeSelectedUnit(self, change, units):
-        if change == 1:
-            self.selectedUnit = (self.selectedUnit + 1)
-            if self.selectedUnit >= len(units.data):
-                self.selectedUnit = 0
-                self.firstVisibleBox = 0
-            elif self.selectedUnit >= self.firstVisibleBox + (self.numColumns * self.numRows):
-                self.firstVisibleBox += self.numColumns
+    def changeSelectedUnit(self, change, units, buildings):
+        if self.mode == 2:
+            if change == 1:
+                self.selectedUnit = (self.selectedUnit + 1)
+                if self.selectedUnit >= len(units.data):
+                    self.selectedUnit = 0
+                    self.firstVisibleBox = 0
+                elif self.selectedUnit >= self.firstVisibleBox + (self.numColumns * self.numRows):
+                    self.firstVisibleBox += self.numColumns
 
-        elif change == -1:
-            self.selectedUnit = (self.selectedUnit - 1)
-            if self.selectedUnit < 0:
-                self.selectedUnit = len(units.data) - 1
-                if len(units.data) > self.numColumns * self.numRows:
-                    self.firstVisibleBox = self.numColumns * (len(units.data) // self.numColumns)
-            elif self.selectedUnit < self.firstVisibleBox:
-                self.firstVisibleBox -= self.numColumns
-
-        elif change == -10:
-            self.selectedUnit -= self.numColumns
-
-            if self.selectedUnit < self.firstVisibleBox:
+            elif change == -1:
+                self.selectedUnit = (self.selectedUnit - 1)
                 if self.selectedUnit < 0:
-                    if self.numColumns + self.selectedUnit + self.numColumns * \
-                            (len(units.data) // self.numColumns) < len(units.data):
+                    self.selectedUnit = len(units.data) - 1
+                    if len(units.data) > self.numColumns * self.numRows:
                         self.firstVisibleBox = self.numColumns * (len(units.data) // self.numColumns)
-                        self.selectedUnit = self.numColumns + self.selectedUnit + self.numColumns * \
-                                            (len(units.data) // self.numColumns)
-                    else:
-                        self.selectedUnit += self.numColumns
-
-                else:
+                elif self.selectedUnit < self.firstVisibleBox:
                     self.firstVisibleBox -= self.numColumns
 
-        elif change == 10:
-            self.selectedUnit += self.numColumns
-
-            if self.selectedUnit >= self.firstVisibleBox + (self.numColumns * self.numRows):
-                if self.numColumns * (len(units.data) // self.numColumns) <= \
-                        self.selectedUnit - self.numColumns < len(units.data):
-
-                    self.firstVisibleBox = 0
-                    self.selectedUnit = (self.selectedUnit - self.numColumns) % self.numColumns
-                elif self.selectedUnit <= len(units.data):
-                    self.firstVisibleBox += self.numColumns
-                else:
-                    self.selectedUnit -= self.numColumns
-            elif self.selectedUnit >= len(units.data):
+            elif change == -10:
                 self.selectedUnit -= self.numColumns
+
+                if self.selectedUnit < self.firstVisibleBox:
+                    if self.selectedUnit < 0:
+                        if self.numColumns + self.selectedUnit + self.numColumns * \
+                                (len(units.data) // self.numColumns) < len(units.data):
+                            self.firstVisibleBox = self.numColumns * (len(units.data) // self.numColumns)
+                            self.selectedUnit = self.numColumns + self.selectedUnit + self.numColumns * \
+                                                (len(units.data) // self.numColumns)
+                        else:
+                            self.selectedUnit += self.numColumns
+
+                    else:
+                        self.firstVisibleBox -= self.numColumns
+
+            elif change == 10:
+                self.selectedUnit += self.numColumns
+
+                if self.selectedUnit >= self.firstVisibleBox + (self.numColumns * self.numRows):
+                    if self.numColumns * (len(units.data) // self.numColumns) <= \
+                            self.selectedUnit - self.numColumns < len(units.data):
+
+                        self.firstVisibleBox = 0
+                        self.selectedUnit = (self.selectedUnit - self.numColumns) % self.numColumns
+                    elif self.selectedUnit <= len(units.data):
+                        self.firstVisibleBox += self.numColumns
+                    else:
+                        self.selectedUnit -= self.numColumns
+                elif self.selectedUnit >= len(units.data):
+                    self.selectedUnit -= self.numColumns
+
+        elif self.mode == 1:
+            if change == 1:
+                self.selectedUnit = (self.selectedUnit + 1)
+                if self.selectedUnit >= len(buildings.data):
+                    self.selectedUnit = 0
+                    self.firstVisibleBox = 0
+                elif self.selectedUnit >= self.firstVisibleBox + (self.numColumns * self.numRows):
+                    self.firstVisibleBox += self.numColumns
+
+            elif change == -1:
+                self.selectedUnit = (self.selectedUnit - 1)
+                if self.selectedUnit < 0:
+                    self.selectedUnit = len(buildings.data) - 1
+                    if len(units.data) > self.numColumns * self.numRows:
+                        self.firstVisibleBox = self.numColumns * (len(buildings.data) // self.numColumns)
+                elif self.selectedUnit < self.firstVisibleBox:
+                    self.firstVisibleBox -= self.numColumns
+
+            elif change == -10:
+                self.selectedUnit -= self.numColumns
+
+                if self.selectedUnit < self.firstVisibleBox:
+                    if self.selectedUnit < 0:
+                        if self.numColumns + self.selectedUnit + self.numColumns * \
+                                (len(buildings.data) // self.numColumns) < len(buildings.data):
+                            self.firstVisibleBox = self.numColumns * (len(buildings.data) // self.numColumns)
+                            self.selectedUnit = self.numColumns + self.selectedUnit + self.numColumns * \
+                                                (len(units.data) // self.numColumns)
+                        else:
+                            self.selectedUnit += self.numColumns
+
+                    else:
+                        self.firstVisibleBox -= self.numColumns
+
+            elif change == 10:
+                self.selectedUnit += self.numColumns
+
+                if self.selectedUnit >= self.firstVisibleBox + (self.numColumns * self.numRows):
+                    if self.numColumns * (len(buildings.data) // self.numColumns) <= \
+                            self.selectedUnit - self.numColumns < len(buildings.data):
+
+                        self.firstVisibleBox = 0
+                        self.selectedUnit = (self.selectedUnit - self.numColumns) % self.numColumns
+                    elif self.selectedUnit <= len(buildings.data):
+                        self.firstVisibleBox += self.numColumns
+                    else:
+                        self.selectedUnit -= self.numColumns
+                elif self.selectedUnit >= len(buildings.data):
+                    self.selectedUnit -= self.numColumns
 
     # Method that breaks up how many boxes will fit into the middle square, and sets the padding accordingly. Will not
     # be perfect
@@ -431,5 +491,82 @@ class BottomMenu:
             size += 1
             testFont = pygame.font.Font(Config.gameFont, size)
             testText = testFont.render(renderText, True, self.TEXT_COLOR)
+
+        return size
+
+    def buildBuilding(self, buildType):
+        if Main.buildings.data[0].inventory[4] > 5:
+            Main.buildings.data.append(Building.building(Config.dotX, Config.dotY, -1, buildType))
+            Main.buildings.data[0].inventory[4] -= 5
+
+
+class BuildMenu:
+    screenHeight = 0
+    screenWidth = 0
+
+    font = None
+
+    def __init__(self, screenHeight, screenWidth):
+        self.screenHeight = screenHeight
+        self.screenWidth = screenWidth
+
+        self.font = pygame.font.Font(Config.gameFont, self.sizeFont(self.screenWidth / 16, self.screenHeight / 8, "Cost: 100 Wood"))
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, pygame.Color(255, 128, 0, 128), (self.screenWidth / 4, self.screenHeight / 4,
+                                                                   self.screenWidth / 2, self.screenHeight / 4 + self.screenHeight / 16))
+        # Water tower part of the build menu
+        pygame.draw.rect(surface, pygame.Color(16, 247, 247), (self.screenWidth / 4 + self.screenWidth / 32, self.screenHeight / 4 + self.screenHeight / 32,
+                         self.screenWidth / 16, self.screenWidth / 16))
+        surface.blit(self.font.render("Water Building", True, pygame.Color(0, 0, 0)), (self.screenWidth / 4 + self.screenWidth / 32,
+                                                                                         self.screenHeight / 4 + self.screenHeight / 32 + self.screenWidth / 16))
+        surface.blit(self.font.render("Stores Water", True, pygame.Color(0, 0, 0)), (self.screenWidth / 4 + self.screenWidth / 32,
+                                                                                         self.screenHeight / 4 + self.screenHeight / 32 + self.screenWidth / 16 + self.screenHeight / 32))
+        surface.blit(self.font.render("Cost: 5 Wood", True, pygame.Color(0, 0, 0)), (self.screenWidth / 4 + self.screenWidth / 32,
+                                                                                         self.screenHeight / 4 + self.screenHeight / 16 + self.screenWidth / 16 + self.screenHeight / 32))
+        surface.blit(self.font.render("Hotkey: B", True, pygame.Color(0, 0, 0)), (self.screenWidth / 4 + self.screenWidth / 32,
+                                                                                         self.screenHeight / 4 + self.screenHeight / 16 + self.screenWidth / 16 + 2 * self.screenHeight / 32))
+
+        # Wood storage part of the build menu
+        pygame.draw.rect(surface, pygame.Color(255, 255, 204), (self.screenWidth / 2 - self.screenWidth / 32,
+                          self.screenHeight / 4 + self.screenHeight / 32, self.screenWidth / 16, self.screenWidth / 16))
+        surface.blit(self.font.render("Wood Building", True, pygame.Color(0, 0, 0)),
+                     (self.screenWidth / 2 - self.screenWidth / 32,
+                      self.screenHeight / 4 + self.screenHeight / 32 + self.screenWidth / 16))
+        surface.blit(self.font.render("Stores Wood", True, pygame.Color(0, 0, 0)),
+                     (self.screenWidth / 2 - self.screenWidth / 32,
+                      self.screenHeight / 4 + self.screenHeight / 32 + self.screenWidth / 16 + self.screenHeight / 32))
+        surface.blit(self.font.render("Cost: 5 Wood", True, pygame.Color(0, 0, 0)),
+                     (self.screenWidth / 2 - self.screenWidth / 32,
+                      self.screenHeight / 4 + self.screenHeight / 16 + self.screenWidth / 16 + self.screenHeight / 32))
+        surface.blit(self.font.render("Hotkey: N", True, pygame.Color(0, 0, 0)),
+                     (self.screenWidth / 2 - self.screenWidth / 32,
+                      self.screenHeight / 4 + self.screenHeight / 16 + self.screenWidth / 16 + 2 * self.screenHeight / 32))
+
+        # Wood storage part of the build menu
+        pygame.draw.rect(surface, pygame.Color(0, 102, 0), (self.screenWidth / 4 + self.screenWidth / 2 - self.screenWidth / 16 - self.screenWidth / 32,
+                          self.screenHeight / 4 + self.screenHeight / 32, self.screenWidth / 16, self.screenWidth / 16))
+        surface.blit(self.font.render("Farm", True, pygame.Color(0, 0, 0)),
+                     (self.screenWidth / 4 + self.screenWidth / 2 - self.screenWidth / 16 - self.screenWidth / 32,
+                      self.screenHeight / 4 + self.screenHeight / 32 + self.screenWidth / 16))
+        surface.blit(self.font.render("Farms Food", True, pygame.Color(0, 0, 0)),
+                     (self.screenWidth / 4 + self.screenWidth / 2 - self.screenWidth / 16 - self.screenWidth / 32,
+                      self.screenHeight / 4 + self.screenHeight / 32 + self.screenWidth / 16 + self.screenHeight / 32))
+        surface.blit(self.font.render("Cost: 5 Wood", True, pygame.Color(0, 0, 0)),
+                     (self.screenWidth / 4 + self.screenWidth / 2 - self.screenWidth / 16 - self.screenWidth / 32,
+                      self.screenHeight / 4 + self.screenHeight / 16 + self.screenWidth / 16 + self.screenHeight / 32))
+        surface.blit(self.font.render("Hotkey: M", True, pygame.Color(0, 0, 0)),
+                     (self.screenWidth / 4 + self.screenWidth / 2 - self.screenWidth / 16 - self.screenWidth / 32,
+                      self.screenHeight / 4 + self.screenHeight / 16 + self.screenWidth / 16 + 2 * self.screenHeight / 32))
+
+    def sizeFont(self, verticalSpace, horizontalSpace, renderText):
+        size = 10
+        testFont = pygame.font.Font(Config.gameFont, size)
+        testText = testFont.render(renderText, True, pygame.Color(0, 0, 0))
+
+        while testFont.get_linesize() < verticalSpace and testText.get_width() < horizontalSpace - horizontalSpace * .05:
+            size += 1
+            testFont = pygame.font.Font(Config.gameFont, size)
+            testText = testFont.render(renderText, True, pygame.Color(0, 0, 0))
 
         return size

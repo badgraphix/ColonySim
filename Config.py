@@ -11,6 +11,7 @@ import GUI
 
 # GlobalVariables
 gameFont = pygame.font.match_font('arial')
+gameMode = 1
 
 screenXSize = 1280
 screenYSize = 720
@@ -119,6 +120,5 @@ farmsImg = farmsx32
 MAX_UNIT_HUNGER = 100
 
 # Setting up the screen and the bottom menu
-
 
 

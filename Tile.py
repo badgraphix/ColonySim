@@ -5,16 +5,11 @@ class tile(object):  # class for tiles, mostly a placeholder/template for tile g
     numStone= 0
     numWood = 0
     numFood = 0
-    traversable = 1
+    traversable = 1 #Traversable is 1, non-traversable is 0
     stationedUnitID = -1 # -1 means no unit is occupying this tile
-
-    def __init__(self, tileType, numWater, numStone, numWood, numFood, traversable):  # initialized with it's tile type, grassland by default
-        self.tileType = tileType
-        self.numWater = 50
-        self.numStone = numStone
-        self.numWood = numWood
-        self.numFood = numFood
-        self.traversable = traversable
+    building = None
+    def __init__(self, tileType):  # initialized with it's tile type, grassland by default
+        self.setType(tileType)
 
     def setType(self, tileType):  # setter for type
         self.tileType = tileType
@@ -31,23 +26,23 @@ class tile(object):  # class for tiles, mostly a placeholder/template for tile g
             self.numFood = 0
             self.traversable = 1
         if self.tileType == 2:  # 2 for Water
-            self.numWater = 50
+            self.numWater = 10
             self.numStone = 0
             self.numWood = 0
             self.numFood = 0
-            self.traversable = 0
+            self.traversable = 1#0
         if self.tileType == 3:  # 3 for Mountain
             self.numWater = 0
             self.numStone = 50
             self.numWood = 0
             self.numFood = 0
-            self.traversable = 0
+            self.traversable = 1#0
         if self.tileType == 4:  # 4 for Farmland
             self.numWater = 0
             self.numStone = 0
             self.numWood = 0
             self.numFood = 50
-            self.traversable = 0
+            self.traversable = 1#0
 
     def getType(self):
         return self.tileType
@@ -104,3 +99,14 @@ class tile(object):  # class for tiles, mostly a placeholder/template for tile g
         self.stationedUnitID = unitID
     def getStationedUnitID(self):
         return self.stationedUnitID
+    def setStationedBuildingID(self, buildingID):
+        print("BUILDING SET")
+        self.stationedBuildingID = buildingID
+    def getStationedBuildingID(self):
+        return self.stationedBuildingID
+    def doesTileHaveResources(self):
+        total = self.numWater + self.numStone + self.numWood + self.numFood
+        if total > 0:
+            return True
+        else:
+            return False

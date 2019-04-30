@@ -65,10 +65,7 @@ def scaleSprites():
 
 def testSelect():
     Config.selectedUnitID = Config.gameMap.getTile(Config.dotX, Config.dotY).getStationedUnitID()
-
-
-def testSelect():
-    print(Config.gameMap.getTile(Config.dotX, Config.dotY).getStationedUnitID())
+    #print(Config.gameMap.getTile(Config.dotX, Config.dotY).getStationedUnitID())
 
 
 def inputEditor():
@@ -79,20 +76,28 @@ def inputEditor():
     if pygame.event.peek(QUIT) or keypress[K_ESCAPE]:
         Config.stop = 1
 
-    # Removing this as it interferes
-    '''
+    if keypress[K_t]:
+        Main.actors.data[0].translatePosition(0,1)
+    if keypress[K_6]:
+        Main.actors.data[0].translatePosition(0,-1)
+    if keypress[K_r]:
+        Main.actors.data[0].translatePosition(-1,0)
+    if keypress[K_y]:
+        Main.actors.data[0].translatePosition(1,0)
+
+    # Movement across map
     Config.subTileX-=(keypress[K_RIGHT]-keypress[K_LEFT])*(32//Config.tileSize+5)*3#arrow keys are used to pan around the world
     Config.subTileY-=(keypress[K_DOWN]-keypress[K_UP])*(32//Config.tileSize+5)*3#^^
-    '''
+
     Config.offsetX += Config.subTileX // Config.tileSize
     Config.offsetY += Config.subTileY // Config.tileSize
     Config.subTileX = Config.subTileX % Config.tileSize
     Config.subTileY = Config.subTileY % Config.tileSize
     Config.dotX = (Config.dotX - (keypress[K_a] - keypress[K_d])) \
                   % Config.gameMap.xSize  # wasd are used to move the cursor around, the black tile
-    Config.dotY = (Config.dotY - (keypress[K_w] - keypress[K_s]))\
+    Config.dotY = (Config.dotY - (keypress[K_w] - keypress[K_s])) \
                   % Config.gameMap.ySize  # ^^
-
+    '''
     if keypress[K_RIGHT]:
         Config.bottomMenu.changeSelectedUnit(1, Main.actors)
     if keypress[K_LEFT]:
@@ -101,10 +106,11 @@ def inputEditor():
         Config.bottomMenu.changeSelectedUnit(-10, Main.actors)
     if keypress[K_DOWN]:
         Config.bottomMenu.changeSelectedUnit(10, Main.actors)
+    '''
 
     # New controls for changing tile types. The new choices are E, R, T, and Y. This is so the bottom menu controls correspond to
     # their labels
-    if keypress[K_e]:
+    if keypress[K_1]:
         for tempX in range(-Config.brushSize, Config.brushSize + 1):
             for tempY in range(-Config.brushSize, Config.brushSize + 1):
                 if Config.brushType == 0:
@@ -124,7 +130,7 @@ def inputEditor():
                         Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
                                                 (Config.dotY + tempY) % Config.gameMap.ySize, 0)
 
-    if keypress[K_r]:
+    if keypress[K_2]:
         for tempX in range(-Config.brushSize, Config.brushSize + 1):
             for tempY in range(-Config.brushSize, Config.brushSize + 1):
                 if Config.brushType == 0:
@@ -144,7 +150,7 @@ def inputEditor():
                         Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
                                                 (Config.dotY + tempY) % Config.gameMap.ySize, 1)
 
-    if keypress[K_t]:
+    if keypress[K_3]:
         for tempX in range(-Config.brushSize, Config.brushSize + 1):
             for tempY in range(-Config.brushSize, Config.brushSize + 1):
                 if Config.brushType == 0:
@@ -164,7 +170,7 @@ def inputEditor():
                         Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
                                                 (Config.dotY + tempY) % Config.gameMap.ySize, 2)
 
-    if keypress[K_y]:
+    if keypress[K_4]:
         for tempX in range(-Config.brushSize, Config.brushSize + 1):
             for tempY in range(-Config.brushSize, Config.brushSize + 1):
                 if Config.brushType == 0:
@@ -184,7 +190,7 @@ def inputEditor():
                         Config.gameMap.setColor((Config.dotX + tempX) % Config.gameMap.xSize,
                                                 (Config.dotY + tempY) % Config.gameMap.ySize, 3)
 
-    if keypress[K_u]:
+    if keypress[K_5]:
         for tempX in range(-Config.brushSize, Config.brushSize + 1):
             for tempY in range(-Config.brushSize, Config.brushSize + 1):
                 if Config.brushType == 0:
@@ -205,13 +211,14 @@ def inputEditor():
                                                 (Config.dotY + tempY) % Config.gameMap.ySize, 4)
 
     # Here are the controls for the bottom menu, which is located in Config.py
+    '''
     if keypress[K_1]:
         Config.bottomMenu.changeMode(1)
     if keypress[K_2]:
         Config.bottomMenu.changeMode(2)
     if keypress[K_3]:
         Config.bottomMenu.changeMode(3)
-
+'''
     # adjusts the brush size
     if keypress[K_p]:
         Config.brushSize += 1
@@ -253,3 +260,85 @@ def inputEditor():
     # Space is used to pause the game
     if keypress[K_SPACE]:
         Config.pause = (Config.pause + 1) % 2
+
+def inputGame():
+    pygame.event.pump()
+    keypress = pygame.key.get_pressed()
+
+    # Quits the game if "ESCAPE" or the corner 'x' are pressed
+    if pygame.event.peek(QUIT) or keypress[K_ESCAPE]:
+        Config.stop = 1
+
+    # Removing this as it interferes
+
+    Config.subTileX-=(keypress[K_RIGHT]-keypress[K_LEFT])*(32//Config.tileSize+5)*3#arrow keys are used to pan around the world
+    Config.subTileY-=(keypress[K_DOWN]-keypress[K_UP])*(32//Config.tileSize+5)*3#^^
+
+    Config.offsetX += Config.subTileX // Config.tileSize
+    Config.offsetY += Config.subTileY // Config.tileSize
+    Config.subTileX = Config.subTileX % Config.tileSize
+    Config.subTileY = Config.subTileY % Config.tileSize
+    Config.dotX = (Config.dotX - (keypress[K_a] - keypress[K_d])) \
+                  % Config.gameMap.xSize  # wasd are used to move the cursor around, the black tile
+    Config.dotY = (Config.dotY - (keypress[K_w] - keypress[K_s]))\
+                  % Config.gameMap.ySize  # ^^
+
+    if keypress[K_SEMICOLON]:
+        Config.bottomMenu.changeSelectedUnit(1, Main.actors, Main.buildings)
+    if keypress[K_k]:
+        Config.bottomMenu.changeSelectedUnit(-1, Main.actors, Main.buildings)
+    if keypress[K_o]:
+        Config.bottomMenu.changeSelectedUnit(-10, Main.actors, Main.buildings)
+    if keypress[K_l]:
+        Config.bottomMenu.changeSelectedUnit(10, Main.actors, Main.buildings)
+
+    # Here are the controls for the bottom menu, which is located in Config.py
+    if keypress[K_1]:
+        Config.bottomMenu.changeMode(1)
+    if keypress[K_2]:
+        Config.bottomMenu.changeMode(2)
+    if keypress[K_3]:
+        Config.bottomMenu.changeMode(3)
+
+    # Select a unit.
+    if keypress[K_RETURN]:
+        testSelect()
+
+    # here the plus and minus(without shift so - and =) are used to zoom in and out by powers of 2, the zoom is centered on the middle of the screen, and the cursor stays put relative to the map not the window(on purpose)
+    if keypress[K_EQUALS] and Config.tileSize <= 80:
+        Config.tileSize = Config.tileSize * 2
+        Config.xlength = Config.xlength // 2
+        Config.ylength = Config.ylength // 2
+        Config.offsetX -= Config.xlength // 2
+        Config.offsetY -= Config.ylength // 2
+        scaleSprites()
+    if keypress[K_MINUS] and Config.tileSize >= 5:
+        Config.tileSize = Config.tileSize // 2
+        Config.xlength = Config.xlength * 2
+        Config.ylength = Config.ylength * 2
+        Config.offsetX += Config.xlength // 4
+        Config.offsetY += Config.ylength // 4
+        scaleSprites()
+
+    # '9' is used to save the game to a text file, '0' is used to load the save, to save long term, make sure to make a copy of this file elsewhere.
+    if keypress[K_9]:
+        with open("Saves/Save.txt", "wb") as fp:
+            pickle.dump(Config.gameMap, fp)
+    if keypress[K_0]:
+        with open("Saves/Save.txt", "rb") as fp:
+            Config.gameMap = pickle.load(fp)
+
+    # Space is used to pause the game
+    if keypress[K_SPACE]:
+        Config.pause = (Config.pause + 1) % 2
+
+    if keypress[K_0]:
+        Config.bottomMenu.showMenu = not Config.bottomMenu.showMenu
+
+    if keypress[K_b]:
+        Config.bottomMenu.buildBuilding(3)
+    if keypress[K_n]:
+        Config.bottomMenu.buildBuilding(5)
+    if keypress[K_m]:
+        Config.bottomMenu.buildBuilding(2)
+

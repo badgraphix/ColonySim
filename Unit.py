@@ -1,7 +1,7 @@
-# Cam Brady, John Bertsch, Kevin Dunn
-# CSC 305
-# Colony Sim Game: Units
-# 3/25/2019
+#Cam Brady, John Bertsch, Kevin Dunn
+#CSC 305
+#Colony Sim Game: Units
+#2/28/2019
 
 import pickle
 import pygame
@@ -9,55 +9,51 @@ from pygame.locals import *
 import sys, random, os.path
 import math
 from Tile import *
+import Main
 import Config
 
-
 class Actor:
-    data = []
-    totalActors = 0
-
-    def __init__(self, num, x, y):
-        self.totalActors = num
-        for temp in range(0, num):
-            unitTemp = unit(random.randint(0, x), random.randint(0, y), temp)
+    data=[]
+    totalActors=0
+    def __init__(self, num,x,y):
+        self.totalActors=num
+        for unitID in range(0,num):
+            #TODO: Make sure they don't spawn on non-traversable terrain.
+            unitTemp=unit(random.randint(0,x),random.randint(0,y), unitID)
             self.data.append(unitTemp)
-
     def allAct(self):
-        for temp in range(0, self.totalActors):
+        for temp in range(0,self.totalActors):
             self.data[temp].perform()
 
 
-# focusTileTypes: when pathfinding, the unit will move towards the closest tile that is one of these type
+
+
+#focusTileTypes: when pathfinding, the unit will move towards the closest tile that is one of these type
 # Strategies for priority queue
 class FarmerStrategy:
-    focusTileTypes = [4]  # Farmland
-
+    focusTileTypes = [4] #Farmland
 
 class WoodcutterStrategy:
-    focusTileTypes = [1]  # Forest
-
+    focusTileTypes = [1] #Forest
 
 class WaterCollectorStrategy:
-    focusTileTypes = [2]  # Water
-
+    focusTileTypes = [2] #Water
 
 class StoneCollectorStrategy:
-    focusTileTypes = [3]  # Mountain
-
+    focusTileTypes = [3] #Mountain
 
 class SoldierStrategy:
-    focusTileTypes = None
-
+    focusTileTypes = []
 
 class IdleStrategy:
-    focusTileTypes = None
+    focusTileTypes = []
 
-
+immortalUnits = False #If immortalUnits is true, units won't dwindle away.
 class unit:
     # Coordinates
     xPos = 0
     yPos = 0
-    # Target coordinates
+    #Target coordinates
     targetXPos = None
     targetYPos = None
     hitPoints = 100
@@ -70,21 +66,20 @@ class unit:
     inventory = [0, 0, 0, 0, 0, 0]
     behavior = 0  # Each behavior type is currently stored as an int. 0 is standby mode, where the unit will not perform any actions.
     targetTile = None  # Specifies where the unit is heading towards. Does not always contain a value.
-    priorityQueue = [FarmerStrategy, WoodcutterStrategy, WaterCollectorStrategy, StoneCollectorStrategy,
-                     SoldierStrategy, IdleStrategy]
-
+    priorityQueue = [WaterCollectorStrategy, FarmerStrategy, WoodcutterStrategy, StoneCollectorStrategy, SoldierStrategy, IdleStrategy]
+    pathfindArray = []
     def __init__(self, x, y, unitID):
         self.unitID = unitID
         self.setXPos(x)
         self.setYPos(y)
-        # self.setInPriorityQueue(1,0)
+        self.translatePosition(0, 0)
 
+        #self.setInPriorityQueue(1,0)
     def setInventory(self, resourceType, quantity):
         self.inventory[resourceType] += quantity
 
-    def getCurrentStrategy(self, index):  # Returns the current strategy at the specified index in the priority queue.
-        return self.priorityQueue[index]
-
+    def getCurrentStrategy(self,index): #Returns the current strategy at the specified index in the priority queue.
+       return self.priorityQueue[index]
     def setBehavior(self, behaviorType):
         self.behavior = behaviorType
 
@@ -126,10 +121,8 @@ class unit:
     def getCurrentTile(self):
         # TODO: Create getTile(x, y) in gMap.
         return self.getTileOfPos(self.getXPos(), self.getYPos())  # .tileType (between 0 and 4)
-
-    def getTileOfPos(self, x, y):
+    def getTileOfPos(self,x,y):
         return Config.gameMap.getTile(x, y)
-
     def setXPos(self, val):
         self.xPos = val
 
@@ -137,14 +130,32 @@ class unit:
         self.yPos = val
 
     def setTargetXPos(self, val):
-        self.targetXPos = val % Config.gameMap.xSize
+        if val == None:
+            self.targetXPos = None
+        else:
+            self.targetXPos = val % Config.gameMap.xSize
 
     def setTargetYPos(self, val):
-        self.targetYPos = val % Config.gameMap.ySize
+        if val == None:
+            self.targetYPos = None
+        else:
+            self.targetYPos = val % Config.gameMap.ySize
 
     def setTargetPos(self, x, y):
+        #print('setting t pos')
         self.setTargetXPos(x);
         self.setTargetYPos(y);
+        if x and y:
+            focusTileType = self.getTileOfPos(x,y).getType()
+            # Find target tile type of closet position
+            #print(focusTileType)
+            #self.pathfindArray = self.pathfind(focusTileType)
+            #print(len(self.pathfindArray), ' is the length!')
+    def restoreHungerPoints(self):
+        self.hungerPoints = 100
+
+    def restoreThirstPoints(self):
+        self.thirstPoints = 100
 
     def isUnitAtTargetPos(self):
         return self.getXPos() == self.getTargetXPos() and self.getYPos() == self.getTargetYPos();
@@ -156,204 +167,251 @@ class unit:
         self.yPos += y
         newTile = Config.gameMap.getTile(self.getXPos(), self.getYPos())
         newTile.setStationedUnitID(self.unitID)
-
-    def collectResource(self):
-        # Farms resource on the tile the unit is standing on. This is fired for all units on every tick, if it is possible for them to farm something.
-        currentTile = self.getCurrentTile()  # TODO: add a function in Tile that lets us remove a resource from it and return it here.
-        resourceData = currentTile.collectResource(
-            1)  # TODO: add a function to Tile called collectResource() that returns .type (resource type) and .amount.
-        self.inventory[resourceData[0]] = self.inventory[resourceData[0]] + resourceData[
-            1]  # Add that to unit's inventory.
-        # print("Farming resource. Quantity ", resourceData[1], " of type ", resourceData[0])
-
-    def findClosestTileOfType(self, destinationTileType):
-        # TODO: Basically this whole function.
-        targetTile = None
-        tiles = Config.gameMap.data
-        # print("TOTAL TILES " + str(len(tiles)))
-        # Search for the nearest tile of tileType
-        mapSizeX = Config.gameMap.xSize
-        mapSizeY = Config.gameMap.ySize
-        tileFound = False
-        for x in range(0,
-                       mapSizeX):  # This should check all tiles around the unit, then the ones around them, and so on, continuing farther out each time.
-            for y in range(0, mapSizeY):
-                if tileFound == False:
-                    tile = Config.gameMap.getTile(x, y)  # Right now we are using a much dumber algorithm to test with.
-                    tileType = tile.getType()
-                    # print(tileType, " vs ", destinationTileType)
-                    if tileType == destinationTileType:
-                        # print("Setting to ", x, ",", y)
-                        self.setTargetXPos(x)
-                        self.setTargetYPos(y)
-                        tileFound = True
-                else:
-                    break
-            if tileFound == True:
-                break
-
-    def pathfind(tileType):
-        path = []
-
-        # calculate the distance from the current tile to the target
-        def calcH(x, y, targX, targY):
-            return sqrt((abs(targX - x) ** 2) + (abs(targY - y) ** 2))
-
-        # x and y are (x,y) g is distance from start pos(can be used to limit runtime), patharris a list of directions generated with recursive backtracking
-        def recSearch(x, y, g, patharr):
-            # base cases to terminate recursion
-            if (0):
-                patharr.pop(-1)
-                return  # case for if current tile its checking is impassable //get clarification\\
-
-            if (g >= 50):
-                return  # limiting run time
-
-            if (x == targetXPos and y == targetYPos):  # if we found a way to the target pos
-                return patharr
-
-            # calc f score for the 4 surrounding tiles put to a list
-            fscores = []
-            fscores += (g + 1) + calcH(xPos + 1, yPos)  # [0] right
-            fscores += (g + 1) + calcH(xPos - 1, yPos)  # [1] left
-            fscores += (g + 1) + calcH(xPos, yPos + 1)  # [2] up
-            fscores += (g + 1) + calcH(xPos, yPos - 1)  # [3] down
-
-            checked = [0, 0, 0, 0]
-
-            for j in range(0, 4):
-                min = fscores[0]
-                minind = 0
-                for i in range(0, 4 - j):
-                    if (fscores[i] < min and not checked[i]):
-                        min = fscores
-                        minind = 0
-                checked[minind] = 1
-
-                if (minind == 0):
-                    recSearch(x + 1, y, g + 1, patharr.append(minind))
-
-                if (minind == 1):
-                    recSearch(x - 1, y, g + 1, patharr.append(minind))
-
-                if (minind == 2):
-                    recSearch(x, y + 1, g + 1, patharr.append(minind))
-
-                if (minind == 3):
-                    recSearch(x, y - 1, g + 1, patharr.append(minind))
-
-        # get the target x and y values for each unit
-        findClosestTileOfType(self, tileType)
-
-        # xPos yPos denote unit position, targetXPos and targetYPos denote destination
-
-    def isUnitAtTargetPos(self):  # Returns true if unit is at target position, returns false if it is not.
-        return (self.getXPos() == self.getTargetXPos()) and (self.getYPos() == self.getTargetYPos())
-
-    def perform(
-            self):  # This is fired every tick. What action the unit performs is dependent on its behavior, as well as external factors.
-        if self.getPriorityQueue()[0] == 1:  # Continuously travel right
-            self.translatePosition(1, 0)
-        elif self.getPriorityQueue()[0] == 2:  # Travel to the nearest tile of type 2.
-            if self.getTargetXPos() == None:
-                self.findClosestTileOfType(2)  # sets as target
-
-            if self.isUnitAtTargetPos() == True:  # If you are on the target tile, start collecting resources!
-                self.collectResource()
-
-            # TODO: If one unit is heading toward a tile, should other units try heading somewhere else?
-            # Pathfind to (self.targetXPos, self.targetYPos)
+    def die(self):
+        self.hitPoints = 0
+    def dwindleAway(self): #A baseline function that reduces all of those survival points
+        if immortalUnits == False:
+            self.reduceHungerPoints()
+            self.reduceThirstPoints()
 
     def reduceHungerPoints(self):
-        if self.hungerPoints - 1 < 0:  # starve
+        starveUnit = .1 #How much hunger points are lost in a single step.
+        if self.hungerPoints - starveUnit < 0: #starve
             self.hungerPoints = 0
+            self.die()
         else:
-            self.hungerPoints -= 1;
-        if self.hungerPoints >= 80:  # Heal if the user is well-fed.
+            self.hungerPoints -= starveUnit;
+        if self.hungerPoints >= 80: #Heal if the user is well-fed.
             self.hitPoints += 1
-            if self.hitPoints > 100:  # Enforce the cap
+            if self.hitPoints > 100: #Enforce the cap
                 self.hitPoints = 100;
+
+    def reduceThirstPoints(self):
+        dehydrateUnit = .1 #How much thirst points are lost in a single step
+        if self.thirstPoints - dehydrateUnit < 0:  # starve
+            self.thirstPoints = 0
+            self.die()
+        else:
+            self.thirstPoints -= dehydrateUnit ;
 
     def collectResource(self):
         # Farms resource on the tile the unit is standing on. This is fired for all units on every tick, if it is possible for them to farm something.
         currentTile = self.getCurrentTile()
         resourceData = currentTile.collectResource(1)
-        self.inventory[resourceData[0]] = self.inventory[resourceData[0]] + resourceData[
-            1]  # Add that to unit's inventory.
-        print("Farming resource. Quantity ", resourceData[1], " of type ", resourceData[0])
+        tileType = resourceData[0]
+        amountTaken = resourceData[1]
+        self.inventory[tileType] = self.inventory[tileType] + amountTaken #Add that to unit's inventory.
+        if amountTaken == 0:
+            #print("the well is dry. heading home")
+            homeBase = Main.buildings.getHomeBase()
+            #print(homeBase.getXPos(), ",",  homeBase.getYPos())
+            self.setTargetPos(homeBase.getXPos(), homeBase.getYPos())
+        #print("Farming resource. Quantity ", resourceData[1], " of type ", resourceData[0])
 
-    def findPosOfClosestTileOfType(self,
-                                   destinationTileTypeArray):  # Returns closest potential target tile instance given the array of tile types it could be.
-        # Is the unit already on a potential target tile?
+    def findPosOfClosestTileOfType(self, destinationTileTypeArray): #Returns closest potential target tile instance given the array of tile types it could be.
+        #Is the unit already on a potential target tile?
         if self.isTileOfType(Config.gameMap.getTile(self.getXPos(), self.getYPos()), destinationTileTypeArray) == True:
             return [self.getXPos(), self.getYPos()]
 
         # Search for the nearest tile of tileType
         tileFound = False
-        maxDistance = 5  # The farthest distance the unit will bother scanning for tiles
-        distance = 1  # The shortest distance the unit will bother scanning. This should probably start at 1.
-        while tileFound == False:  # check all spaces [distance] tiles away from the unit
+        maxDistance = 100 #The farthest distance the unit will bother scanning for tiles
+        distance = 1 #The shortest distance the unit will bother scanning. This should probably start at 1.
+        while tileFound == False: #check all spaces [distance] tiles away from the unit
             x = distance
             y = 0
             tileFound = False
-            while tileFound == False:  # Check each position that adds up to the specified distance.
+            while tileFound == False: #Check each position that adds up to the specified distance.
                 unitXPos = self.getXPos()
                 unitYPos = self.getYPos()
-                targetXPosArray = [unitXPos - x, unitXPos + x, unitXPos - x, unitXPos + x]
-                targetYPosArray = [unitYPos - y, unitYPos - y, unitYPos + y, unitYPos + y]
+                targetXPosArray = [unitXPos - x, unitXPos+x, unitXPos-x, unitXPos+x]
+                targetYPosArray = [unitYPos - y, unitYPos-y, unitYPos+y, unitYPos+y]
                 for i in range(0, 3):
                     targetXPos = targetXPosArray[i]
                     targetYPos = targetYPosArray[i]
-                    if self.isTileOfType(Config.gameMap.getTile(targetXPos, targetYPos),
-                                         destinationTileTypeArray) == True:
+                    tile = Config.gameMap.getTile(targetXPos,targetYPos)
+                    if tile and self.isTileOfType(tile, destinationTileTypeArray) == True and tile.doesTileHaveResources() == True:
                         return [targetXPos, targetYPos]
-                    # No tile found [distance] tiles away that's a target tile.
+                    #No tile found [distance] tiles away that's a target tile.
                 x -= 1
                 y += 1
-                if y > distance:  # We have checked every tile [distance] tiles away.
+                if y > distance: #We have checked every tile [distance] tiles away.
                     break
-            distance += 1  # Increase distance and check all tiles that distance away.
-            if distance > maxDistance:  # Don't bother checking tiles more than the specified max distance away..
-                # print("No tile found")
+            distance += 1 #Increase distance and check all tiles that distance away.
+            if distance > maxDistance: #Don't bother checking tiles more than the specified max distance away..
+                print("NO TILES FOUND. TRY NEXT PRIORITY.")
                 break
 
     def isTileOfType(self, tile, destinationTileTypeArray):
-        # Note: This function was written to simplify the structure of findClosestTileOfType. It was not really intended for general use.
+        #Note: This function was written to simplify the structure of findClosestTileOfType. It was not really intended for general use.
         for destinationTileType in destinationTileTypeArray:
             tileType = tile.getType()
             if tileType == destinationTileType:
                 return True
 
-    def perform(
-            self):  # This is fired every tick. What action the unit performs is dependent on its behavior, as well as external factors.
-        self.reduceHungerPoints()
-        # print('Top priority: ', self.getPriorityQueue()[0])
-        priorityIndex = 0
-        while self.getTargetXPos() == None:
-            currentStrategy = self.getCurrentStrategy(priorityIndex)
-            if currentStrategy.focusTileTypes:
-                # Find target tile type of closet position
-                targetPos = self.findPosOfClosestTileOfType(
-                    currentStrategy.focusTileTypes)  # returns closest potential target tile
-                if targetPos:
-                    self.setTargetPos(targetPos[0], targetPos[1])
-                else:  # Tile not found! Try next strategy.
-                    priorityIndex += 1
-            else:
-                break  # This priority has no target tiles (meaning it asks us to idle). That's managable, so let's break the loop and settle on this!
-        if self.isUnitAtTargetPos() == True:  # If you are on the target tile, start collecting resources!
-            self.collectResource()
+    def pathfind(self, tileType):
+        path = []
+        found = [0]
 
-        # TODO: If one unit is heading toward a tile, should other units try heading somewhere else?
-        # Pathfind to (self.targetXPos, self.targetYPos)
-        if self.getTargetXPos():
-            # print('At ', self.getTargetXPos(), ' going to ', self.getXPos())
-            if self.getTargetXPos() < self.getXPos():
-                self.translatePosition(-1, 0)
-            elif self.getTargetXPos() > self.getXPos():
-                self.translatePosition(1, 0)
+        # calculate the distance from the current tile to the target
+        def calcH(x, y, targX, targY):
+            return ((abs(targX - x) ** 2) + (abs(targY - y) ** 2))
 
-            elif self.getTargetYPos() < self.getYPos():
-                self.translatePosition(0, -1)
-            elif self.getTargetYPos() > self.getYPos():
-                self.translatePosition(0, 1)
+        #x and y are (x,y) g is distance from start pos(can be used to limit runtime), patharris a list of directions generated with recursive backtracking
+        def recSearch(x, y, targx, targy, g, patharr, found, lastdir):
+            # translate the last move so we dont get stuck in an up down loop
+            dontcheck = 5
+            if (lastdir == 0):
+                dontcheck = 1
+            if (lastdir == 1):
+                dontcheck = 0
+            if (lastdir == 2):
+                dontcheck = 3
+            if (lastdir == 3):
+                dontcheck = 2
+
+            #base cases to terminate recursion
+            #print(self.getTileOfPos())
+            if(self.getTileOfPos(x,y)).traversable == 0: #Tile is not traversable
+                #print("POP")
+                patharr.pop(-1)
+                return # case for if current tile its checking is impassable //get clarification\\
+            if(g >= 10):
+                return #limiting run time
+
+            if(x == targx and y == targy): # if we found a way to the target pos
+                found[0] = 1
+                return patharr
+
+            #calc f score for the 4 surrounding tiles put to a list
+            fscores = []
+            # calc f score for the 4 surrounding tiles put to a list
+            fscores = []
+            fscores.append((g + 1) + calcH(x + 1, y, targx, targy))  # [0] right
+            fscores.append((g + 1) + calcH(x - 1, y, targx, targy))  # [1] left
+            fscores.append((g + 1) + calcH(x, y - 1, targx, targy))  # [2] up
+            fscores.append((g + 1) + calcH(x, y + 1, targx, targy))  # [3] down
+
+            checked = [0,0,0,0]
+
+            for j in range(0,4):
+
+                minval = fscores[0]
+                minind = 0
+
+                if(j != 0):
+                    for k in range(0,4):
+                        if(not checked[k] and k != dontcheck):
+                            minval = fscores[k]
+                            minind = k
+
+                for i in range(0,4):
+                    temp = float(fscores[i])
+                    if(temp < minval and not checked[i] and i != dontcheck):
+                        minval = fscores[i]
+                        minind = i
+
+                checked[minind] = 1
+
+                #right
+                if(minind == 0 and not found[0]):
+                    patharr.append(minind)
+                    recSearch(x + 1, y, targx, targy, g + 1, patharr, found, minind)
+                    if(found[0]):
+                        return patharr
+
+                #left
+                if(minind == 1 and not found[0]):
+                    patharr.append(minind)
+                    recSearch(x - 1, y, targx, targy, g + 1, patharr, found, minind)
+                    if(found[0]):
+                        return patharr
+
+                #up
+                if(minind == 2 and not found[0]):
+                    patharr.append(minind)
+                    recSearch(x, y - 1, targx, targy, g + 1, patharr, found, minind)
+                    if(found[0]):
+                        return patharr
+
+                #down
+                if(minind == 3 and not found[0]):
+                    patharr.append(minind)
+                    recSearch(x, y + 1, targx, targy, g + 1, patharr, found, minind)
+                    if(found[0]):
+                        return patharr
+
+        path = recSearch(self.getXPos(), self.getYPos(), self.getTargetXPos(), self.getTargetYPos(), 0, path, found, 5)
+        return path
+
+
+
+
+
+    def perform(self):  # This is fired every tick. What action the unit performs is dependent on its behavior, as well as external factors.
+        if self.hitPoints > 0: #Unit must be alive to perform any actions.
+            priorityIndex = 0
+            #print('Top priority: ', priorityIndex)
+            while self.getTargetXPos() == None:
+                currentStrategy = self.getCurrentStrategy(priorityIndex)
+                if currentStrategy.focusTileTypes:
+                    targetPos = self.findPosOfClosestTileOfType(currentStrategy.focusTileTypes) #returns closest potential target tile
+                    #print(targetPos[0])
+                    if targetPos:
+                        #print("Target pos found")
+                        self.setTargetPos(targetPos[0], targetPos[1])
+
+                    else: #Tile not found! Try next strategy.
+                        #print("Tile not found")
+                        priorityIndex += 1
+                else:
+                    break #This priority has no target tiles (meaning it asks us to idle). That's managable, so let's break the loop and settle on this!
+
+            self.dwindleAway() #Baseline starving. You will get this on a step no matter what, so even if you idle you lose hunger points.
+            if self.isUnitAtTargetPos() == True: #If you are on the target tile, start collecting resources!
+                #building = self.getCurrentTile().getBuilding()
+                building = Main.buildings.getHomeBase()
+                if self.getXPos() == 0 and self.getYPos() == 0: #building != None: #There is a building on the tile
+                     #Put stuff in the base.
+                    for i in range(0,len(self.inventory)-1):
+                        building.inventory[i] = building.inventory[i] + self.inventory[i]
+                        self.inventory[i] = 0
+                        #Replenish unit health
+                        self.restoreHungerPoints()
+                        self.restoreThirstPoints()
+                    #print("Inventory deposited.")
+                    self.setTargetPos(None, None)
+                else: #Normal behavior
+                    self.collectResource()
+                self.dwindleAway()  # starve a little for farming/depositing on a step
+
+            #TODO: If one unit is heading toward a tile, should other units try heading somewhere else?
+            #Pathfind to (self.targetXPos, self.targetYPos)
+
+
+            if self.getTargetXPos() != None:
+                #print('At ', self.getXPos(), ' going to ', self.getTargetXPos())
+                if self.getTargetXPos() < self.getXPos():
+                    self.translatePosition(-1, 0)
+                elif self.getTargetXPos() > self.getXPos():
+                    self.translatePosition(1, 0)
+
+                elif self.getTargetYPos() < self.getYPos():
+                    self.translatePosition(0, -1)
+                elif self.getTargetYPos() > self.getYPos():
+                    self.translatePosition(0, 1)
+
+            #To swap to the intensive pathfinding, comment out the above if statements and run this instead.
+            '''if self.pathfindArray and len(self.pathfindArray) > 0:
+                if self.pathfindArray[0] == 0:
+                    self.translatePosition(1, 0)  # move right
+                elif self.pathfindArray[0] == 1:
+                    self.translatePosition(-1, 0)  # move left
+                elif self.pathfindArray[0] == 2:
+                    self.translatePosition(0, 1)  # move up
+                elif self.pathfindArray[0] == 3:
+                    self.translatePosition(0, -1)  # move down
+                self.pathfindArray.pop(0)'''
+            self.dwindleAway()  # starve a little for moving during a step
+
+import Config
